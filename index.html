@@ -35,7 +35,7 @@
           <svg class="theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
           <svg class="theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.6 8.6 0 1 0 20.2 15.1Z"/></svg>
         </button>
-        <button class="sound-toggle" type="button" aria-label="Play ambient music" title="Play ambient music" aria-pressed="false">
+        <button class="sound-toggle" type="button" aria-label="Play background music" title="Play background music" aria-pressed="false">
           <svg class="sound-toggle__waves" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M16 9a5 5 0 0 1 0 6m2.5-8.5a8.5 8.5 0 0 1 0 11"/></svg>
           <svg class="sound-toggle__muted" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="m17 9 5 6m0-6-5 6"/></svg>
         </button>
@@ -258,7 +258,7 @@
       <a class="brand brand--footer" href="#top"><span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 27V6M16 26C14.3 18.5 10 14.1 4.5 12M16 26c1.3-7.7 5.2-12.1 11.5-14M16 18c-.7-4.8-2.4-8.1-5.4-10.8M16 17c.8-4.5 2.6-7.6 5.4-10" /></svg></span><span class="brand__name">Jebas Agnel</span></a>
       <p>Thoughtful data work, from source to story.</p>
       <a class="back-to-top" href="#top">Back to the top <span aria-hidden="true">↑</span></a>
-      <span class="footer__copyright">© <span id="year">2026</span> Jebas Agnel</span>
+      <span class="footer__copyright">© <span id="year">2026</span> Jebas Agnel · “Aesthetic” by <a href="https://commons.wikimedia.org/wiki/File:DreamHeaven_-_Aesthetic.ogg" target="_blank" rel="noopener noreferrer">DreamHeaven</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> · MP3 fallback converted for compatibility</span>
     </footer>
     <div class="edge-light" aria-hidden="true">
       <span class="edge-light__segment edge-light__segment--top"></span>
@@ -267,77 +267,59 @@
       <span class="edge-light__segment edge-light__segment--left"></span>
     </div>
     <aside class="buddy" id="portfolio-buddy" aria-label="Jebas’s portfolio companion">
-      <div class="buddy__bubble" id="buddy-message" role="status" aria-live="polite">
+      <div class="buddy__bubble" id="buddy-message" role="status" aria-live="polite" hidden>
         <button class="buddy__dismiss" type="button" aria-label="Dismiss greeting">×</button>
         <p class="buddy__copy">Hi! I’m Jebas. Welcome to my little corner of the data world!</p>
       </div>
-      <button class="buddy__character" type="button" aria-label="Jebas’s animated avatar. Show a greeting." aria-controls="buddy-message" aria-expanded="true">
-        <svg class="buddy__figure" viewBox="0 0 160 190" role="img" aria-label="A cheerful chibi character wearing a black suit and burgundy shirt">
+      <button class="buddy__character" type="button" aria-label="Jebas’s animated avatar. Show a greeting." aria-controls="buddy-message" aria-expanded="false">
+        <svg class="buddy__figure" viewBox="0 0 96 112" role="img" aria-label="An original anime-inspired illustration of Jebas">
           <defs>
-            <linearGradient id="buddy-hair" x1="42" y1="16" x2="111" y2="82" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#25272c"/>
-              <stop offset=".56" stop-color="#090b10"/>
-              <stop offset="1" stop-color="#34343a"/>
-            </linearGradient>
-            <linearGradient id="buddy-skin" x1="62" y1="37" x2="103" y2="100" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#f4c996"/>
-              <stop offset="1" stop-color="#d99462"/>
-            </linearGradient>
-            <linearGradient id="buddy-suit" x1="47" y1="99" x2="113" y2="175" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#30323a"/>
-              <stop offset=".48" stop-color="#171920"/>
-              <stop offset="1" stop-color="#08090d"/>
-            </linearGradient>
-            <linearGradient id="buddy-shirt" x1="72" y1="98" x2="92" y2="146" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#8f3043"/>
-              <stop offset="1" stop-color="#571927"/>
+            <linearGradient id="buddy-hair" x1="29" y1="8" x2="67" y2="52" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#34313a"/>
+              <stop offset="1" stop-color="#17191f"/>
             </linearGradient>
           </defs>
-          <ellipse cx="80" cy="181" fill="#19191b" opacity=".13" rx="34" ry="5"/>
-          <g class="buddy__legs" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="9">
-            <path d="M59 137 58 166Q57 173 53 179L47 183H73L77 176 80 139Z" fill="#111319"/>
-            <path d="m82 139 1 35 4 9h27l-8-7-5-10-2-32Z" fill="#111319"/>
+          <ellipse class="buddy__shadow" cx="49" cy="106" rx="19" ry="3.2"/>
+          <g class="buddy__legs">
+            <path class="buddy__leg buddy__leg--left" d="m41 85-1 12" fill="none" stroke="#34313a" stroke-linecap="round" stroke-width="4"/>
+            <path class="buddy__leg buddy__leg--right" d="m56 85 1 12" fill="none" stroke="#34313a" stroke-linecap="round" stroke-width="4"/>
+            <path d="M40 96q-7 2-7 5 0 2 11 1l2-2-1-3Z" fill="#4b4140"/>
+            <path d="M57 96q7 2 7 5 0 2-11 1l-2-2 1-3Z" fill="#4b4140"/>
           </g>
-          <g class="buddy__shoes" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
-            <path d="M53 171q-5 6-11 9-5 3-3 7h35q3-3-1-7l-7-7Z" fill="#111217"/>
-            <path d="m101 171 7 7 10 3q6 2 5 6H87q-3-3 1-7l4-8Z" fill="#111217"/>
+          <path class="buddy__body" d="M39 59q-8 1-11 9l-4 20q12 5 25 4 14 1 25-4l-5-20q-2-8-11-9l-10 7Z" fill="#819579" stroke="#34313a" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+          <path d="m40 59 9 7 9-7-4 12h-10Z" fill="#f3dfc7" stroke="#34313a" stroke-linejoin="round" stroke-width="1.6"/>
+          <path d="M30 67q-5 5-5 14" fill="none" stroke="#819579" stroke-linecap="round" stroke-width="6"/>
+          <path d="M30 67q-5 5-5 14" fill="none" stroke="#34313a" stroke-linecap="round" stroke-width="1.6"/>
+          <g class="buddy__wave-arm">
+            <path d="M64 67q8-2 11-10l2-10" fill="none" stroke="#819579" stroke-linecap="round" stroke-width="6"/>
+            <path d="M64 67q8-2 11-10l2-10" fill="none" stroke="#34313a" stroke-linecap="round" stroke-width="1.6"/>
+            <path d="M76 47q-3-3-1-6 2-2 4 1l2 3q3-5 5-3 2 2-2 7l-4 3Z" fill="#e7b58d" stroke="#34313a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
           </g>
-          <path class="buddy__body-sticker" d="M59 91h41l7 10q18 2 26 15l13 42q2 8-6 10-6 1-9-6l-9-22-2 30H49l-2-30-10 22q-3 7-9 6-8-2-5-10l13-42q7-13 25-15Z" fill="#fff" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
-          <path class="buddy__body" d="M59 96h41l7 9q18 2 26 15l13 38q2 6-4 8-5 1-7-5l-12-27-4 35H51l-3-35-12 27q-2 6-7 5-6-2-4-8l13-38q7-13 26-15Z" fill="url(#buddy-suit)" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
-          <path d="m66 96 14 12 14-12-3 40-11 13-11-13Z" fill="url(#buddy-shirt)" stroke="#fff" stroke-linejoin="round" stroke-width="3"/>
-          <path d="m61 94 19 14-13 20-11-22Zm38 0-19 14 13 20 11-22Z" fill="#20222a" stroke="#fff" stroke-linejoin="round" stroke-width="3"/>
-          <path d="m67 129 13 20 13-20" fill="none" stroke="#555762" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-          <circle cx="80" cy="120" r="1.7" fill="#d6c5aa"/>
-          <circle cx="80" cy="133" r="1.7" fill="#d6c5aa"/>
-          <g class="buddy__wave-arm" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
-            <path d="M103 106q13 0 18-12l3-10 10 3-2 17q-3 19-27 22Z" fill="url(#buddy-suit)"/>
-            <path d="m123 84 2-10q1-7 7-6l6 2 5-2q6 0 6 5v5q2 7-3 9l-7 5-11-1Z" fill="url(#buddy-skin)"/>
-            <path d="m138 74 3-5m-10 4 1-5m-7 7 1-4" fill="none" stroke="#bf7952" stroke-width="2"/>
+          <path d="M43 53h12v9l-6 5-6-5Z" fill="#e7b58d" stroke="#34313a" stroke-linejoin="round" stroke-width="1.8"/>
+          <path d="M25 37C22 24 27 10 39 6c12-5 25 1 31 12 6 12 4 25-4 35l-9-3H32Z" fill="url(#buddy-hair)" stroke="#34313a" stroke-linejoin="round" stroke-width="2"/>
+          <ellipse cx="29" cy="39" rx="3.7" ry="5.2" fill="#e7b58d" stroke="#34313a" stroke-width="1.5"/>
+          <ellipse cx="68" cy="39" rx="3.7" ry="5.2" fill="#e7b58d" stroke="#34313a" stroke-width="1.5"/>
+          <path class="buddy__head" d="M31 28q2-13 18-13 16 0 18 14l-1 14q-2 13-17 16Q34 56 32 44Z" fill="#e7b58d" stroke="#34313a" stroke-linejoin="round" stroke-width="2"/>
+          <path d="M29 36C26 22 33 10 43 7q16-5 26 10 4 6 3 15l-6-3q-5-3-9-11-7 9-17 10-6 1-11 8Z" fill="url(#buddy-hair)" stroke="#34313a" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+          <path d="M37 37q4-3 8 0m8 0q4-3 8 0" fill="none" stroke="#34313a" stroke-linecap="round" stroke-width="1.5"/>
+          <ellipse cx="41" cy="41" rx="2" ry="3" fill="#29252b"/>
+          <ellipse cx="56" cy="41" rx="2" ry="3" fill="#29252b"/>
+          <circle cx="41.5" cy="40" r=".8" fill="#fffdf8"/>
+          <circle cx="56.5" cy="40" r=".8" fill="#fffdf8"/>
+          <ellipse cx="35" cy="46" rx="3.3" ry="1.6" fill="#d98278" opacity=".4"/>
+          <ellipse cx="62" cy="46" rx="3.3" ry="1.6" fill="#d98278" opacity=".4"/>
+          <path d="M47 46q1.5 1 3 0m-4 5q3 3 7 0" fill="none" stroke="#9a5d52" stroke-linecap="round" stroke-width="1.3"/>
+          <path d="m63 20 2-3 2 3 3 1.2-3 1.2-2 3-2-3-3-1.2Z" fill="#d0a56c"/>
+          <g class="buddy__sparkle" fill="#d0a56c">
+            <path d="m18 44 1.5 3.5L23 49l-3.5 1.5L18 54l-1.5-3.5L13 49l3.5-1.5Z"/>
+            <circle cx="77" cy="71" r="1.5"/>
           </g>
-          <path d="M71 85h18v17q-9 9-18 0Z" fill="url(#buddy-skin)" stroke="#fff" stroke-linejoin="round" stroke-width="4"/>
-          <g class="buddy__head">
-            <path d="M46 48q-5-25 17-34 29-13 52 8 13 12 8 38l-7 19q-6 20-30 25-24-4-34-23Z" fill="url(#buddy-hair)" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="9"/>
-            <path d="M52 52q0-23 26-25 27-2 36 22l-2 26q-2 23-30 27-26-4-30-25Z" fill="url(#buddy-skin)" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
-            <path d="M48 56q-7-23 9-39 14-14 34-10 24 3 31 22 4 11-1 24-6-12-17-17-13 8-31 6-9 0-17 14l-4 13Z" fill="url(#buddy-hair)" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/>
-            <path d="M49 43q7-22 29-24-10 12-5 22 15-17 35-15-8 7-10 15 12-5 23 1-8 1-15 8-15 8-30 5-13-2-22 11l-6 11q-8-14 1-34Z" fill="url(#buddy-hair)"/>
-            <path d="M58 32q12-12 24-11M89 25q13-8 22 1" fill="none" stroke="#55545b" stroke-linecap="round" stroke-width="2" opacity=".7"/>
-            <path d="M58 57q8-6 16-1m13 0q8-5 16 1" fill="none" stroke="#201511" stroke-linecap="round" stroke-width="4"/>
-            <ellipse cx="68" cy="66" fill="#fff" rx="7" ry="8"/>
-            <ellipse cx="96" cy="66" fill="#fff" rx="7" ry="8"/>
-            <ellipse cx="69" cy="67" fill="#302018" rx="4.5" ry="6"/>
-            <ellipse cx="97" cy="67" fill="#302018" rx="4.5" ry="6"/>
-            <circle cx="70.5" cy="64.5" r="2" fill="#fff"/>
-            <circle cx="98.5" cy="64.5" r="2" fill="#fff"/>
-            <ellipse cx="56" cy="77" fill="#ef9d91" opacity=".42" rx="6" ry="3"/>
-            <ellipse cx="108" cy="77" fill="#ef9d91" opacity=".42" rx="6" ry="3"/>
-            <path d="m81 70-2 7q2 2 5 0" fill="none" stroke="#bc7956" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-            <path d="M74 83q7 8 16 0" fill="none" stroke="#85423e" stroke-linecap="round" stroke-width="2.5"/>
-            <path d="M76 84q6 4 12 0" fill="none" stroke="#fff4e5" stroke-linecap="round" stroke-width="1.5"/>
-          </g>
-          <path class="buddy__sparkle" d="m30 55 2 5 5 2-5 2-2 5-2-5-5-2 5-2Zm103 37 1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5Z" fill="#c49a61"/>
         </svg>
       </button>
     </aside>
-    <audio id="ambient-audio" src="./assets/audio/ambient-electronic-loop.mp3" preload="none" loop aria-hidden="true" tabindex="-1"></audio>
+    <audio id="ambient-audio" preload="none" aria-hidden="true" tabindex="-1">
+      <source src="./assets/audio/aesthetic-ambient.ogg" type="audio/ogg; codecs=vorbis">
+      <source src="./assets/audio/aesthetic-ambient.mp3" type="audio/mpeg">
+    </audio>
   </body>
 </html>

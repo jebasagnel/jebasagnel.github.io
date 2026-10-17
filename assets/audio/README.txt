@@ -1,9 +1,11 @@
-Ambient track: "Hypnotic ambient electronic music by MusicLM"
-Source: https://commons.wikimedia.org/wiki/File:Hypnotic_ambient_electronic_music_by_MusicLM.mp3
-License: Marked Public domain on Wikimedia Commons.
-Duration: approximately 20 seconds; the track loops.
-The track is an AI-generated music sample.
-
-The portfolio attempts audible autoplay at a low volume. Some browsers block
-audible autoplay until a visitor interacts with the page. In that case, use
-the speaker button in the header to start playback or mute/unmute it.
+Ambient track: "Aesthetic" by DreamHeaven
+Source: https://commons.wikimedia.org/wiki/File:DreamHeaven_-_Aesthetic.ogg
+License: Creative Commons Attribution 4.0 (CC BY 4.0)
+License terms: https://creativecommons.org/licenses/by/4.0/
+Duration: approximately 3 minutes 22 seconds.
+The track does not loop. Playback fades in at a low volume and can be muted with
+the speaker button in the header. If the browser blocks autoplay, the button
+prompts the visitor to start playback.
+An MP3 copy is included as a format conversion for browsers without Ogg Vorbis
+support. It preserves the same track and is identified as a compatibility
+conversion in the portfolio's attribution.
