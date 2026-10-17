@@ -138,52 +138,57 @@ mobileNav?.querySelectorAll("a").forEach((link) => {
 
 if (buddy && buddyCharacter && buddyBubble && buddyCopy) {
   const sections = [...document.querySelectorAll("[data-buddy-message]")];
-  let activeSection = sections[0];
-  const greetedSections = new Set(activeSection ? [activeSection] : []);
+  const actionClasses = ["buddy--action-wave", "buddy--action-think", "buddy--action-point", "buddy--action-present", "buddy--action-walk"];
+  let activeSection;
   let companionDismissed = false;
   let greetingTimer;
-  let hopTimer;
+  let actionTimer;
   let scrollFrame;
-  let welcomeTimer;
 
   const hideGreeting = () => {
     window.clearTimeout(greetingTimer);
     buddyBubble.hidden = true;
+    buddy.classList.remove("buddy--speaking");
     buddyCharacter.setAttribute("aria-expanded", "false");
   };
 
-  const showGreeting = (message, duration = 3800, shouldHop = true) => {
+  const showGreeting = (message, section = activeSection, duration = 4800) => {
     buddyCopy.textContent = message;
     buddyBubble.hidden = false;
+    buddy.classList.add("buddy--speaking");
     buddyCharacter.setAttribute("aria-expanded", "true");
     window.clearTimeout(greetingTimer);
     greetingTimer = window.setTimeout(hideGreeting, duration);
 
-    if (shouldHop) {
-      buddy.classList.remove("buddy--hopping");
-      window.clearTimeout(hopTimer);
+    if (section) {
+      const actionClass = `buddy--action-${section.dataset.buddyAction || "wave"}`;
+      buddy.classList.remove(...actionClasses);
+      window.clearTimeout(actionTimer);
       void buddy.offsetWidth;
-      buddy.classList.add("buddy--hopping");
-      hopTimer = window.setTimeout(() => buddy.classList.remove("buddy--hopping"), 900);
+      buddy.classList.add(actionClass);
+      actionTimer = window.setTimeout(() => buddy.classList.remove(actionClass), 1700);
     }
   };
 
   const updateBuddyForScroll = () => {
     scrollFrame = undefined;
     const marker = window.innerHeight * 0.44;
-    const section = sections.find((candidate) => {
+    const sectionAtMarker = sections.find((candidate) => {
       const rect = candidate.getBoundingClientRect();
       return rect.top <= marker && rect.bottom >= marker;
     });
+    const section = sectionAtMarker || sections.reduce((nearest, candidate) => {
+      const rect = candidate.getBoundingClientRect();
+      const distance = marker < rect.top ? rect.top - marker : marker - rect.bottom;
+      const nearestRect = nearest.getBoundingClientRect();
+      const nearestDistance = marker < nearestRect.top ? nearestRect.top - marker : marker - nearestRect.bottom;
+      return distance < nearestDistance ? candidate : nearest;
+    }, sections[0]);
 
     if (section && section !== activeSection) {
       activeSection = section;
-      window.clearTimeout(welcomeTimer);
-      if (!greetedSections.has(section)) {
-        greetedSections.add(section);
-        if (!companionDismissed) {
-          showGreeting(section.dataset.buddyMessage);
-        }
+      if (!companionDismissed) {
+        showGreeting(section.dataset.buddyMessage, section);
       }
     }
   };
@@ -195,9 +200,8 @@ if (buddy && buddyCharacter && buddyBubble && buddyCopy) {
   };
 
   buddyCharacter.addEventListener("click", () => {
-    window.clearTimeout(welcomeTimer);
     companionDismissed = false;
-    showGreeting(activeSection?.dataset.buddyMessage || "Hi! I’m Jebas. Thanks for stopping by!", 5000);
+    showGreeting(activeSection?.dataset.buddyMessage || "Hi! I’m Jebas. Thanks for stopping by!", activeSection, 5000);
   });
 
   buddyDismiss?.addEventListener("click", () => {
@@ -208,9 +212,4 @@ if (buddy && buddyCharacter && buddyBubble && buddyCopy) {
   window.addEventListener("scroll", scheduleBuddyUpdate, { passive: true });
   window.addEventListener("resize", scheduleBuddyUpdate);
   scheduleBuddyUpdate();
-  welcomeTimer = window.setTimeout(() => {
-    if (!companionDismissed) {
-      showGreeting("Hi! I’m Jebas. Welcome to my little corner of the data world!", 4200, false);
-    }
-  }, 900);
 }

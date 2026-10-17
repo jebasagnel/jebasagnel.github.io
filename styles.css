@@ -56,27 +56,29 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .edge-light__segment--right, .edge-light__segment--left { width: 2px; height: 24%; background: linear-gradient(180deg, transparent, var(--edge-light) 38%, var(--edge-light-warm) 62%, transparent); }
 .edge-light__segment--right { top: 0; right: -1px; animation: edge-light-travel-y 18s linear 4.5s infinite; }
 .edge-light__segment--left { top: 76%; left: -1px; animation: edge-light-travel-y-reverse 18s linear 13.5s infinite; }
-.buddy { position: fixed; z-index: 12; right: 16px; bottom: 10px; display: grid; justify-items: end; width: 70px; pointer-events: none; animation: buddy-enter .65s cubic-bezier(.2, .75, .25, 1) both; }
-.buddy__character { position: relative; display: grid; width: 68px; height: 82px; place-items: end center; padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent; }
+.buddy { position: fixed; z-index: 12; right: 0; bottom: 14px; display: grid; justify-items: end; width: 76px; pointer-events: none; animation: buddy-enter .65s cubic-bezier(.2, .75, .25, 1) both; }
+.buddy__character { position: relative; display: grid; width: 68px; height: 82px; place-items: end center; padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; transform: translateX(22px); transition: transform .28s cubic-bezier(.2, .75, .25, 1); -webkit-tap-highlight-color: transparent; }
+.buddy__character:hover, .buddy__character:focus-visible, .buddy--speaking .buddy__character { transform: translateX(0); }
 .buddy__character::before { position: absolute; inset: 15px 5px 8px; border-radius: 50%; background: radial-gradient(ellipse, color-mix(in srgb, var(--edge-light) 18%, transparent), transparent 72%); content: ""; }
 .buddy__figure { position: relative; display: block; width: 62px; height: 72px; overflow: visible; filter: drop-shadow(0 2px 2px rgb(20 24 28 / 15%)); transform-origin: 50% 100%; animation: buddy-idle 5.5s ease-in-out 1s infinite; }
 .buddy__shadow { fill: color-mix(in srgb, var(--ink) 17%, transparent); transform-box: fill-box; transform-origin: center; }
-.buddy__wave-arm { transform-box: view-box; transform-origin: 76px 51px; }
+.buddy__wave-arm { transform-box: view-box; transform-origin: 65px 67px; }
 .buddy__sparkle { opacity: 0; transform-box: view-box; transform-origin: center; }
-.buddy__bubble { position: absolute; right: 0; bottom: calc(100% + 5px); width: min(224px, calc(100vw - 24px)); margin: 0; padding: 11px 32px 10px 13px; border: 1px solid var(--line); border-radius: 12px 12px 3px 12px; background: var(--paper-raised); box-shadow: 0 7px 20px rgb(20 24 28 / 10%); color: var(--ink); pointer-events: auto; animation: buddy-message-in .24s cubic-bezier(.2, .75, .25, 1) both; }
+.buddy__bubble { position: absolute; right: 12px; bottom: calc(100% + 5px); width: min(224px, calc(100vw - 24px)); margin: 0; padding: 11px 32px 10px 13px; border: 1px solid var(--line); border-radius: 12px 12px 3px 12px; background: var(--paper-raised); box-shadow: 0 7px 20px rgb(20 24 28 / 10%); color: var(--ink); pointer-events: auto; animation: buddy-message-in .24s cubic-bezier(.2, .75, .25, 1) both; }
 .buddy__bubble::after { position: absolute; right: 18px; bottom: -5px; width: 8px; height: 8px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--paper-raised); content: ""; transform: rotate(45deg); }
 .buddy__bubble[hidden] { display: none; }
 .buddy__copy { margin: 0; font-size: 11px; line-height: 1.55; }
 .buddy__dismiss { position: absolute; top: 5px; right: 7px; display: grid; width: 24px; height: 24px; place-items: center; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: 19px; line-height: 1; cursor: pointer; }
 .buddy__dismiss:hover { background: var(--soft); color: var(--ink); }
 .buddy__character:focus-visible, .buddy__dismiss:focus-visible { outline: 2px solid var(--edge-light); outline-offset: 3px; }
-.buddy--hopping .buddy__figure { animation: buddy-hop .62s cubic-bezier(.25, .75, .25, 1); }
-.buddy--hopping .buddy__shadow { animation: buddy-shadow .62s ease-in-out; }
-.buddy--hopping .buddy__leg--left { animation: buddy-step .62s ease-in-out; transform-box: view-box; transform-origin: 41px 87px; }
-.buddy--hopping .buddy__leg--right { animation: buddy-step-reverse .62s ease-in-out; transform-box: view-box; transform-origin: 56px 87px; }
-.buddy--hopping .buddy__wave-arm { animation: buddy-wave .62s ease-in-out 2; }
-.buddy--hopping .buddy__head { animation: buddy-nod .62s ease-in-out; transform-box: view-box; transform-origin: 50% 100%; }
-.buddy--hopping .buddy__sparkle { animation: buddy-sparkle .62s ease-out; }
+.buddy--action-wave .buddy__wave-arm { animation: buddy-wave .72s ease-in-out 2; }
+.buddy--action-wave .buddy__sparkle { animation: buddy-sparkle .8s ease-out; }
+.buddy--action-think .buddy__head, .buddy--action-present .buddy__head { animation: buddy-nod .7s ease-in-out; transform-box: view-box; transform-origin: 50% 100%; }
+.buddy--action-point .buddy__wave-arm { animation: buddy-point .75s ease-in-out; }
+.buddy--action-present .buddy__figure { animation: buddy-present .8s ease-in-out; }
+.buddy--action-walk .buddy__figure { animation: buddy-walk .8s ease-in-out; }
+.buddy--action-walk .buddy__leg--left { animation: buddy-step .8s ease-in-out; transform-box: view-box; transform-origin: 41px 87px; }
+.buddy--action-walk .buddy__leg--right { animation: buddy-step-reverse .8s ease-in-out; transform-box: view-box; transform-origin: 56px 87px; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; }
 svg { display: block; }
@@ -197,12 +199,25 @@ h1 em, h2 em, .project-card h3 em, .contact h2 em { font-weight: 420; }
 }
 @keyframes buddy-wave {
   0%, 100% { transform: rotate(0); }
-  25%, 75% { transform: rotate(-24deg); }
-  50% { transform: rotate(10deg); }
+  25%, 75% { transform: rotate(-18deg); }
+  50% { transform: rotate(8deg); }
+}
+@keyframes buddy-point {
+  0%, 100% { transform: rotate(0); }
+  35%, 70% { transform: rotate(-12deg); }
+}
+@keyframes buddy-present {
+  0%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-3px) rotate(-1deg); }
 }
 @keyframes buddy-nod {
   0%, 100% { transform: rotate(0); }
   45% { transform: rotate(-3deg); }
+}
+@keyframes buddy-walk {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  30% { transform: translateY(-2px) rotate(-2deg); }
+  65% { transform: translateY(0) rotate(2deg); }
 }
 @keyframes buddy-sparkle {
   0%, 100% { opacity: 0; transform: scale(.4); }
@@ -373,10 +388,10 @@ h1 em, h2 em, .project-card h3 em, .contact h2 em { font-weight: 420; }
   .masthead__actions { min-width: unset; gap: 8px; }
   .masthead__actions > .button { display: none; }
   .theme-toggle, .sound-toggle { width: 34px; height: 34px; }
-  .buddy { right: 8px; bottom: 8px; width: 66px; }
-  .buddy__character { width: 64px; height: 76px; }
+  .buddy { right: 0; bottom: 8px; width: 70px; }
+  .buddy__character { width: 64px; height: 76px; transform: translateX(20px); }
   .buddy__figure { width: 58px; height: 68px; }
-  .buddy__bubble { width: min(216px, calc(100vw - 20px)); }
+  .buddy__bubble { right: 10px; width: min(216px, calc(100vw - 20px)); }
   .menu-toggle { display: flex; width: 35px; height: 35px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: transparent; cursor: pointer; }
   .menu-toggle span { width: 12px; height: 1px; background: var(--ink); transition: transform .18s ease; }
   .menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(3px) rotate(45deg); }
@@ -446,5 +461,6 @@ h1 em, h2 em, .project-card h3 em, .contact h2 em { font-weight: 420; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
   .buddy { animation: none; }
   .buddy__figure { animation: none; }
-  .buddy--hopping .buddy__figure, .buddy--hopping .buddy__shadow, .buddy--hopping .buddy__leg, .buddy--hopping .buddy__wave-arm, .buddy--hopping .buddy__head, .buddy--hopping .buddy__sparkle { animation: none; }
+  .buddy__character { transform: none; transition: none; }
+  .buddy--action-wave .buddy__wave-arm, .buddy--action-wave .buddy__sparkle, .buddy--action-think .buddy__head, .buddy--action-present .buddy__head, .buddy--action-point .buddy__wave-arm, .buddy--action-present .buddy__figure, .buddy--action-walk .buddy__figure, .buddy--action-walk .buddy__leg { animation: none; }
 }
