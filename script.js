@@ -23,9 +23,10 @@ themeToggle?.addEventListener("click", () => {
 
 if (soundToggle && ambientAudio) {
   const musicVolume = 0.18;
+  const musicStartVolume = 0.12;
   let fadeFrame;
 
-  ambientAudio.volume = 0;
+  ambientAudio.volume = musicStartVolume;
 
   const updateSoundToggle = () => {
     const isPlaying = !ambientAudio.paused;
@@ -46,7 +47,7 @@ if (soundToggle && ambientAudio) {
 
   const fadeMusicIn = () => {
     window.cancelAnimationFrame(fadeFrame);
-    ambientAudio.volume = 0;
+    const startingVolume = Math.min(ambientAudio.volume, musicVolume);
     let fadeStartedAt;
 
     const fade = (timestamp) => {
@@ -55,7 +56,7 @@ if (soundToggle && ambientAudio) {
       }
 
       const progress = Math.min((timestamp - fadeStartedAt) / 1800, 1);
-      ambientAudio.volume = musicVolume * progress;
+      ambientAudio.volume = startingVolume + (musicVolume - startingVolume) * progress;
 
       if (progress < 1) {
         fadeFrame = window.requestAnimationFrame(fade);
