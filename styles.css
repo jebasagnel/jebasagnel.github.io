@@ -56,6 +56,24 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 .edge-light__segment--right, .edge-light__segment--left { width: 2px; height: 24%; background: linear-gradient(180deg, transparent, var(--edge-light) 38%, var(--edge-light-warm) 62%, transparent); }
 .edge-light__segment--right { top: 0; right: -1px; animation: edge-light-travel-y 18s linear 4.5s infinite; }
 .edge-light__segment--left { top: 76%; left: -1px; animation: edge-light-travel-y-reverse 18s linear 13.5s infinite; }
+.buddy { position: fixed; z-index: 12; right: 22px; bottom: 16px; display: grid; justify-items: end; width: 128px; pointer-events: none; animation: buddy-enter .75s cubic-bezier(.2, .75, .25, 1) both; }
+.buddy__character { display: grid; width: 120px; min-height: 142px; place-items: end center; padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent; }
+.buddy__figure { display: block; width: 112px; height: 133px; overflow: visible; filter: drop-shadow(0 5px 4px rgb(20 24 28 / 14%)); transform-origin: 50% 100%; animation: buddy-idle 4s ease-in-out 1s infinite; }
+.buddy__wave-arm { transform-box: view-box; transform-origin: 66% 57%; }
+.buddy__sparkle { opacity: 0; transform-box: view-box; transform-origin: center; }
+.buddy__bubble { position: absolute; right: 0; bottom: calc(100% - 3px); width: min(258px, calc(100vw - 38px)); margin: 0; padding: 13px 34px 12px 15px; border: 1px solid var(--line); border-radius: 12px 12px 3px 12px; background: var(--paper-raised); box-shadow: 0 9px 28px rgb(20 24 28 / 13%); color: var(--ink); pointer-events: auto; animation: buddy-message-in .3s cubic-bezier(.2, .75, .25, 1) both; }
+.buddy__bubble::after { position: absolute; right: 20px; bottom: -6px; width: 10px; height: 10px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--paper-raised); content: ""; transform: rotate(45deg); }
+.buddy__bubble[hidden] { display: none; }
+.buddy__copy { margin: 0; font-size: 12px; line-height: 1.55; }
+.buddy__dismiss { position: absolute; top: 5px; right: 7px; display: grid; width: 24px; height: 24px; place-items: center; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: 19px; line-height: 1; cursor: pointer; }
+.buddy__dismiss:hover { background: var(--soft); color: var(--ink); }
+.buddy__character:focus-visible, .buddy__dismiss:focus-visible { outline: 2px solid var(--edge-light); outline-offset: 3px; }
+.buddy--hopping .buddy__figure { animation: buddy-hop .72s cubic-bezier(.25, .75, .25, 1); }
+.buddy--hopping .buddy__legs path:first-child { animation: buddy-step .72s ease-in-out; transform-box: view-box; transform-origin: 40% 81%; }
+.buddy--hopping .buddy__legs path:last-child { animation: buddy-step-reverse .72s ease-in-out; transform-box: view-box; transform-origin: 58% 82%; }
+.buddy--hopping .buddy__wave-arm { animation: buddy-wave .72s ease-in-out 2; }
+.buddy--hopping .buddy__head { animation: buddy-nod .72s ease-in-out; transform-box: view-box; transform-origin: 50% 100%; }
+.buddy--hopping .buddy__sparkle { animation: buddy-sparkle .72s ease-out; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; }
 svg { display: block; }
@@ -141,6 +159,47 @@ h1 em, h2 em, .project-card h3 em, .contact h2 em { font-weight: 420; }
 @keyframes edge-light-travel-x-reverse { to { left: 0; } }
 @keyframes edge-light-travel-y { to { top: 76%; } }
 @keyframes edge-light-travel-y-reverse { to { top: 0; } }
+@keyframes buddy-enter {
+  from { opacity: 0; transform: translate(20px, 12px); }
+  to { opacity: 1; transform: translate(0, 0); }
+}
+@keyframes buddy-message-in {
+  from { opacity: 0; transform: translateY(8px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes buddy-idle {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-3px) rotate(-1deg); }
+}
+@keyframes buddy-hop {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  28% { transform: translateY(-20px) rotate(-5deg); }
+  58% { transform: translateY(2px) rotate(3deg); }
+  78% { transform: translateY(-7px) rotate(-2deg); }
+}
+@keyframes buddy-step {
+  0%, 100% { transform: rotate(0); }
+  35% { transform: rotate(-11deg); }
+  70% { transform: rotate(5deg); }
+}
+@keyframes buddy-step-reverse {
+  0%, 100% { transform: rotate(0); }
+  35% { transform: rotate(10deg); }
+  70% { transform: rotate(-5deg); }
+}
+@keyframes buddy-wave {
+  0%, 100% { transform: rotate(0); }
+  25%, 75% { transform: rotate(-19deg); }
+  50% { transform: rotate(7deg); }
+}
+@keyframes buddy-nod {
+  0%, 100% { transform: rotate(0); }
+  45% { transform: rotate(-5deg); }
+}
+@keyframes buddy-sparkle {
+  0%, 100% { opacity: 0; transform: scale(.4); }
+  45%, 75% { opacity: .9; transform: scale(1); }
+}
 
 @keyframes pipeline-flow {
   from { left: 0; opacity: .45; }
@@ -306,6 +365,11 @@ h1 em, h2 em, .project-card h3 em, .contact h2 em { font-weight: 420; }
   .masthead__actions { min-width: unset; gap: 8px; }
   .masthead__actions > .button { display: none; }
   .theme-toggle, .sound-toggle { width: 34px; height: 34px; }
+  .buddy { right: 8px; bottom: 8px; width: 102px; }
+  .buddy__character { width: 98px; min-height: 119px; }
+  .buddy__figure { width: 92px; height: 110px; }
+  .buddy__bubble { width: min(248px, calc(100vw - 28px)); padding: 11px 32px 10px 13px; }
+  .buddy__copy { font-size: 11px; }
   .menu-toggle { display: flex; width: 35px; height: 35px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: transparent; cursor: pointer; }
   .menu-toggle span { width: 12px; height: 1px; background: var(--ink); transition: transform .18s ease; }
   .menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(3px) rotate(45deg); }
@@ -373,4 +437,7 @@ h1 em, h2 em, .project-card h3 em, .contact h2 em { font-weight: 420; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+  .buddy { animation: none; }
+  .buddy__figure { animation: none; }
+  .buddy--hopping .buddy__figure, .buddy--hopping .buddy__legs path:first-child, .buddy--hopping .buddy__legs path:last-child, .buddy--hopping .buddy__wave-arm, .buddy--hopping .buddy__head, .buddy--hopping .buddy__sparkle { animation: none; }
 }

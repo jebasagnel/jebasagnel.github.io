@@ -4,6 +4,11 @@ const menuToggle = document.querySelector(".menu-toggle");
 const soundToggle = document.querySelector(".sound-toggle");
 const ambientAudio = document.querySelector("#ambient-audio");
 const mobileNav = document.querySelector("#mobile-nav");
+const buddy = document.querySelector("#portfolio-buddy");
+const buddyCharacter = buddy?.querySelector(".buddy__character");
+const buddyBubble = buddy?.querySelector(".buddy__bubble");
+const buddyCopy = buddy?.querySelector(".buddy__copy");
+const buddyDismiss = buddy?.querySelector(".buddy__dismiss");
 const year = document.querySelector("#year");
 
 if (year) {
@@ -86,3 +91,62 @@ mobileNav?.querySelectorAll("a").forEach((link) => {
     menuToggle?.setAttribute("aria-label", "Open navigation");
   });
 });
+
+if (buddy && buddyCharacter && buddyBubble && buddyCopy) {
+  const sections = [...document.querySelectorAll("[data-buddy-message]")];
+  let activeSection = sections[0];
+  let greetingTimer;
+  let hopTimer;
+  let scrollFrame;
+
+  const hideGreeting = () => {
+    buddyBubble.hidden = true;
+    buddyCharacter.setAttribute("aria-expanded", "false");
+  };
+
+  const showGreeting = (message, shouldHop = true) => {
+    buddyCopy.textContent = message;
+    buddyBubble.hidden = false;
+    buddyCharacter.setAttribute("aria-expanded", "true");
+    window.clearTimeout(greetingTimer);
+    greetingTimer = window.setTimeout(hideGreeting, 6500);
+
+    if (shouldHop) {
+      buddy.classList.remove("buddy--hopping");
+      window.clearTimeout(hopTimer);
+      void buddy.offsetWidth;
+      buddy.classList.add("buddy--hopping");
+      hopTimer = window.setTimeout(() => buddy.classList.remove("buddy--hopping"), 900);
+    }
+  };
+
+  const updateBuddyForScroll = () => {
+    scrollFrame = undefined;
+    const marker = window.innerHeight * 0.44;
+    const section = sections.find((candidate) => {
+      const rect = candidate.getBoundingClientRect();
+      return rect.top <= marker && rect.bottom >= marker;
+    });
+
+    if (section && section !== activeSection) {
+      activeSection = section;
+      showGreeting(section.dataset.buddyMessage);
+    }
+  };
+
+  const scheduleBuddyUpdate = () => {
+    if (scrollFrame === undefined) {
+      scrollFrame = window.requestAnimationFrame(updateBuddyForScroll);
+    }
+  };
+
+  buddyCharacter.addEventListener("click", () => {
+    showGreeting(activeSection?.dataset.buddyMessage || "Hi! I’m Jebas. Thanks for stopping by!");
+  });
+
+  buddyDismiss?.addEventListener("click", hideGreeting);
+  window.addEventListener("scroll", scheduleBuddyUpdate, { passive: true });
+  window.addEventListener("resize", scheduleBuddyUpdate);
+  scheduleBuddyUpdate();
+  greetingTimer = window.setTimeout(hideGreeting, 6500);
+}
