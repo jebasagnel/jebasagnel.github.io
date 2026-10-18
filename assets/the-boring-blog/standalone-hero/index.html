@@ -100,7 +100,7 @@
       height: 88vh;
       z-index: 0;
       pointer-events: none;
-      opacity: calc(0.35 * (1 - var(--night) * 0.25));
+      opacity: calc(0.42 * (1 - var(--night) * 0.25));
       filter: brightness(calc(1 - var(--night) * 0.72)) saturate(calc(1 - var(--night) * 0.45 + var(--gold) * 0.35));
       -webkit-mask-image: linear-gradient(#000 0 30%, rgba(0,0,0,0.5) 54%, transparent 70%);
       mask-image: linear-gradient(#000 0 30%, rgba(0,0,0,0.5) 54%, transparent 70%);
@@ -112,6 +112,13 @@
       height: 100%;
       object-fit: cover;
       object-position: 50% 0%;
+      transform: scale(1.025);
+      animation: sky-cloud-drift 100s ease-in-out infinite alternate;
+    }
+
+    @keyframes sky-cloud-drift {
+      from { transform: scale(1.025) translateX(-0.65%); }
+      to { transform: scale(1.025) translateX(0.65%); }
     }
 
     /* ==========================================================================
@@ -166,6 +173,7 @@
       display: flex;
       align-items: center;
       gap: 0.625rem;
+      flex: 0 0 auto;
     }
 
     /* ==========================================================================
@@ -211,6 +219,20 @@
       height: 3.25rem;
       padding: 0;
       border: 1px solid var(--line-control);
+    }
+
+    #audio-btn .audio-icon--muted,
+    #audio-btn.active .audio-icon--playing {
+      display: none;
+    }
+
+    #audio-btn.active .audio-icon--muted {
+      display: block;
+    }
+
+    #audio-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
     }
 
     .btn-text {
@@ -603,16 +625,29 @@
 
     @media (max-width: 640px) {
       .mast {
-        padding: 1rem;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+      }
+
+      .mark {
+        min-width: 0;
+        gap: 0.4rem;
       }
 
       .mark__say {
-        max-width: 8rem;
+        max-width: min(8rem, calc(100vw - 12rem));
+        overflow: hidden;
         font-size: 0.62rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
-      .mast__end > #audio-btn,
-      .mast__end > .btn-text {
+      .mast__end {
+        gap: 0.4rem;
+      }
+
+      .mast__end > .btn-text,
+      .mast__end > .seam-btn {
         display: none;
       }
 
@@ -669,7 +704,7 @@
 
     @media (max-width: 640px) and (max-height: 700px) {
       .hero {
-        top: 35vh;
+        top: clamp(9rem, 32vh, 14rem);
       }
 
       .hero__word {
@@ -683,9 +718,62 @@
       }
     }
 
+    @media (max-width: 380px) {
+      .mark__say {
+        max-width: min(7rem, calc(100vw - 12rem));
+      }
+
+      .btn-icon {
+        width: 2.8rem;
+        height: 2.8rem;
+      }
+
+      .subject-pills {
+        gap: 0.25rem;
+      }
+
+      .subject-pill {
+        min-height: 2.4rem;
+        padding-inline: 0.58rem;
+        font-size: 0.74rem;
+      }
+    }
+
+    @media (max-width: 640px) and (max-height: 560px) {
+      .hero {
+        top: clamp(6.5rem, 26vh, 8rem);
+      }
+
+      .hero__word {
+        font-size: clamp(1.65rem, 7.5vw, 2rem);
+      }
+
+      .hero__blurb {
+        max-width: 25rem;
+        font-size: 0.76rem;
+      }
+
+      .track {
+        bottom: max(0.4rem, env(safe-area-inset-bottom));
+      }
+
+      .track__inner,
+      .track__meta {
+        gap: 0.25rem;
+      }
+
+      .subject-pill {
+        min-height: 2.25rem;
+      }
+
+      .track__meta {
+        min-height: 2.25rem;
+      }
+    }
+
     @media (min-width: 641px) and (max-height: 760px) {
       .hero {
-        top: clamp(16rem, 40vh, 19rem);
+        top: clamp(13rem, 35vh, 16rem);
       }
 
       .hero__word {
@@ -720,6 +808,11 @@
       *, *::before, *::after {
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+      }
+
+      .sky img {
+        animation: none;
+        transform: none;
       }
     }
   </style>
@@ -761,10 +854,14 @@
       </button>
 
       <!-- Audio Ambiance Button -->
-      <button type="button" class="btn btn-icon" id="audio-btn" aria-label="Toggle meadow audio" title="Play meadow ambiance">
-        <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <button type="button" class="btn btn-icon" id="audio-btn" aria-label="Play meadow ambiance" title="Play meadow ambiance" aria-pressed="false">
+        <svg class="audio-icon--playing" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 8v4h3l4 3V5L7 8H4z"></path>
           <path d="M14.5 7a4 4 0 0 1 0 6"></path>
+        </svg>
+        <svg class="audio-icon--muted" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 8v4h3l4 3V5L7 8H4z"></path>
+          <path d="m14 8 4 4m0-4-4 4"></path>
         </svg>
       </button>
 
@@ -907,6 +1004,8 @@
        ========================================================================== -->
   <script>
     const SITUATIONS = [{"name": "A small creative break", "src": "creative-break-v1.png", "ground": 0.395, "landmarks": [[0.4, 0.683], [0.397, 0.507], [0.51, 0.3], [0.692, 0.359], [0.792, 0.328]]}, {"name": "An unscheduled collaborator", "src": "cat-on-keyboard-v1.png", "ground": 0.35, "landmarks": [[0.363, 0.692], [0.368, 0.49], [0.408, 0.267], [0.748, 0.406], [0.675, 0.4]]}, {"name": "A very small observatory", "src": "tiny-observatory-v1.png", "ground": 0.38, "landmarks": [[0.303, 0.697], [0.26, 0.5], [0.25, 0.27], [0.716, 0.585], [0.78, 0.395]]}, {"name": "The book has been claimed", "src": "claimed-book-v1.png", "ground": 0.4, "landmarks": [[0.34, 0.7], [0.35, 0.47], [0.31, 0.25], [0.615, 0.32], [0.715, 0.365]]}, {"name": "A very small flight school", "src": "paper-pilot-v1.png", "ground": 0.35, "landmarks": [[0.33, 0.71], [0.35, 0.5], [0.38, 0.25], [0.68, 0.57], [0.73, 0.36]]}, {"name": "An unexpected duet", "src": "piano-duet-v1.png", "ground": 0.35, "landmarks": [[0.33, 0.69], [0.33, 0.49], [0.3, 0.25], [0.72, 0.55], [0.78, 0.37]]}, {"name": "The camera inspector", "src": "camera-inspector-v1.png", "ground": 0.395, "landmarks": [[0.395, 0.72], [0.335, 0.5], [0.32, 0.25], [0.56, 0.6], [0.69, 0.38]]}, {"name": "The missing lunch", "src": "picnic-thief-v1.png", "ground": 0.36, "landmarks": [[0.33, 0.72], [0.35, 0.5], [0.29, 0.25], [0.715, 0.54], [0.775, 0.38]]}, {"name": "Quality control", "src": "robot-inspector-v1.png", "ground": 0.35, "landmarks": [[0.33, 0.69], [0.33, 0.49], [0.3, 0.25], [0.72, 0.55], [0.78, 0.37]]}, {"name": "Wet paint", "src": "wet-paint-v1.png", "ground": 0.35, "landmarks": [[0.33, 0.69], [0.33, 0.49], [0.3, 0.25], [0.72, 0.55], [0.78, 0.37]]}, {"name": "Checkmate, apparently", "src": "cat-checkmate-v1.png", "morphTravel": 0.065, "ground": 0.35, "landmarks": [[0.36, 0.69], [0.32, 0.49], [0.3, 0.25], [0.68, 0.56], [0.76, 0.36]]}, {"name": "A tangled hobby", "src": "tangled-hobby-v1.png", "ground": 0.34, "landmarks": [[0.33, 0.69], [0.33, 0.49], [0.3, 0.25], [0.665, 0.41], [0.78, 0.34]]}, {"name": "Rain for two", "src": "rain-for-two-v1.png", "ground": 0.35, "landmarks": [[0.35, 0.64], [0.34, 0.46], [0.34, 0.24], [0.61, 0.41], [0.69, 0.27]]}, {"name": "Do not disturb", "src": "do-not-disturb-v1.png", "morphTravel": 0.065, "ground": 0.26, "landmarks": [[0.2, 0.65], [0.28, 0.44], [0.72, 0.3], [0.3, 0.59], [0.4, 0.48]]}, {"name": "An ambitious tower", "src": "block-tower-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.32, 0.7], [0.29, 0.49], [0.3, 0.25], [0.71, 0.49], [0.78, 0.31]]}, {"name": "Box beats gift", "src": "box-beats-gift-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.32, 0.71], [0.32, 0.49], [0.32, 0.24], [0.72, 0.5], [0.76, 0.33]]}, {"name": "Bubble inspector", "src": "bubble-inspector-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.29, 0.72], [0.31, 0.48], [0.33, 0.24], [0.72, 0.62], [0.74, 0.36]]}, {"name": "Pottery assistant", "src": "pottery-assistant-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.35, 0.7], [0.32, 0.49], [0.29, 0.24], [0.68, 0.58], [0.77, 0.32]]}, {"name": "A familiar giant", "src": "familiar-giant-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.26, 0.67], [0.23, 0.47], [0.22, 0.24], [0.5, 0.55], [0.47, 0.34]]}, {"name": "Cloud delivery", "src": "cloud-delivery-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.28, 0.7], [0.27, 0.48], [0.29, 0.24], [0.67, 0.52], [0.78, 0.51]]}, {"name": "The laundry portal", "src": "laundry-portal-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.4, 0.69], [0.33, 0.48], [0.28, 0.24], [0.61, 0.76], [0.74, 0.76]]}, {"name": "Borrowed moonlight", "src": "borrowed-moonlight-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.34, 0.69], [0.32, 0.48], [0.32, 0.24], [0.64, 0.45], [0.75, 0.38]]}, {"name": "A very slow voyage", "src": "slow-voyage-v1.png", "ground": 0.38, "morphTravel": 0.05, "landmarks": [[0.33, 0.7], [0.33, 0.49], [0.4, 0.35], [0.67, 0.51], [0.69, 0.36]]}, {"name": "Stars on the line", "src": "stars-on-line-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.25, 0.7], [0.23, 0.49], [0.26, 0.24], [0.77, 0.52], [0.81, 0.33]]}];
+
+    SITUATIONS.find((situation) => situation.name === 'Do not disturb').ground = 0.35;
 
     // Landmark sigma radiuses
     const SIGMAS = [0.18, 0.17, 0.2, 0.14, 0.19];
@@ -1101,7 +1200,7 @@
     bladeGeom.setIndex([0, 1, 2, 1, 3, 2, 2, 3, 4]);
     bladeGeom.computeVertexNormals();
 
-    const bladeCount = 2600;
+    const bladeCount = 3000;
     let grassShader;
     const grassMaterial = new THREE.MeshBasicMaterial({
       color: 0xffffff,
@@ -1144,7 +1243,7 @@
     instancedGrass.instanceColor.needsUpdate = true;
     scene.add(instancedGrass);
 
-    const flowerCount = 42;
+    const flowerCount = 48;
     const flowerStems = new THREE.InstancedMesh(
       new THREE.CylinderGeometry(0.012, 0.018, 0.38, 5),
       new THREE.MeshBasicMaterial({ color: 0x587b43 }),
@@ -1324,30 +1423,55 @@
     // 9. Procedural Audio Engine
     let audioCtx = null, masterGain = null;
     const audioBtn = document.getElementById('audio-btn');
-    audioBtn.addEventListener('click', () => {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-        masterGain.connect(audioCtx.destination);
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    const setAudioButtonState = (isPlaying) => {
+      audioBtn.classList.toggle('active', isPlaying);
+      audioBtn.setAttribute('aria-pressed', String(isPlaying));
+      audioBtn.setAttribute('aria-label', isPlaying ? 'Mute meadow audio' : 'Play meadow ambiance');
+      audioBtn.title = isPlaying ? 'Mute meadow audio' : 'Play meadow ambiance';
+    };
 
-        // Wind noise
-        const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.05;
-        const noise = audioCtx.createBufferSource();
-        noise.buffer = buffer;
-        noise.loop = true;
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(380, audioCtx.currentTime);
-        noise.connect(filter);
-        filter.connect(masterGain);
-        noise.start();
+    audioBtn.addEventListener('click', async () => {
+      const isPlaying = audioBtn.getAttribute('aria-pressed') !== 'true';
+
+      try {
+        if (!AudioContextClass) {
+          throw new Error('Web Audio is not supported by this browser.');
+        }
+
+        if (!audioCtx) {
+          audioCtx = new AudioContextClass();
+          masterGain = audioCtx.createGain();
+          masterGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+          masterGain.connect(audioCtx.destination);
+
+          const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.05;
+          const noise = audioCtx.createBufferSource();
+          noise.buffer = buffer;
+          noise.loop = true;
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(380, audioCtx.currentTime);
+          noise.connect(filter);
+          filter.connect(masterGain);
+          noise.start();
+        }
+
+        if (isPlaying && audioCtx.state !== 'running') {
+          await audioCtx.resume();
+        }
+
+        masterGain.gain.setTargetAtTime(isPlaying ? 0.35 : 0.001, audioCtx.currentTime, 0.2);
+        setAudioButtonState(isPlaying);
+      } catch (error) {
+        setAudioButtonState(false);
+        audioBtn.disabled = true;
+        audioBtn.setAttribute('aria-label', 'Meadow audio unavailable');
+        audioBtn.title = 'Meadow audio unavailable';
+        console.error('Meadow audio could not be started.', error);
       }
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const isOn = audioBtn.classList.toggle('active');
-      masterGain.gain.setTargetAtTime(isOn ? 0.35 : 0.001, audioCtx.currentTime, 0.2);
     });
 
     // 10. Animation Loop

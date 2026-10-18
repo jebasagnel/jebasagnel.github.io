@@ -249,7 +249,7 @@ h1 em, h2 em, .project-card h3 em, .contact h2 em { font-weight: 420; }
 .project-card li { position: relative; padding-left: 14px; color: var(--muted); font-size: 10px; line-height: 1.65; }
 .project-card li::before { position: absolute; top: .65em; left: 0; width: 4px; height: 4px; border-radius: 50%; background: var(--ink); content: ""; }
 .project-card__bottom { display: flex; width: 100%; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 14px; margin-top: auto; }
-.text-link { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 10px; font-weight: 550; }
+.text-link { display: inline-flex; align-items: center; gap: 8px; white-space: normal; font-size: 10px; font-weight: 550; }
 .text-link span { font-size: 14px; transition: transform .18s ease; }
 .text-link:hover span { transform: translate(2px, -2px); }
 
@@ -329,7 +329,11 @@ h1 em, h2 em, .project-card h3 em, .contact h2 em { font-weight: 420; }
 
 @media (max-width: 900px) {
   .page-wrap { width: min(calc(100% - 48px), var(--content)); }
-  .masthead { padding-inline: 24px; }
+  .masthead { gap: 20px; padding-inline: 24px; }
+  .brand { min-width: 0; }
+  .desktop-nav { gap: clamp(12px, 2vw, 22px); }
+  .masthead__actions { min-width: 0; gap: 8px; }
+  .button--small { padding-inline: 10px; gap: 8px; }
   .hero { grid-template-columns: 1fr .9fr; gap: 34px; min-height: 520px; padding-top: 52px; }
   .hero h1 { font-size: clamp(46px, 6.5vw, 62px); }
   .about__body { gap: 44px; }
