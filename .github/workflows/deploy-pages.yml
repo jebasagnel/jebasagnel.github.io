@@ -33,7 +33,9 @@ jobs:
           cp index.html styles.css script.js .nojekyll _site/
           mkdir -p _site/assets/the-boring-blog/standalone-hero/art/situations
           mkdir -p _site/assets/the-boring-blog/standalone-hero/sky
+          mkdir -p _site/assets/images
           cp -R assets/fonts assets/icons assets/audio _site/assets/
+          cp assets/images/portfolio-cat.webp _site/assets/images/
           cp assets/the-boring-blog/standalone-hero/index.html _site/assets/the-boring-blog/standalone-hero/
           cp assets/the-boring-blog/standalone-hero/sky/dawn.webp _site/assets/the-boring-blog/standalone-hero/sky/
           cp assets/the-boring-blog/standalone-hero/art/situations/*.webp _site/assets/the-boring-blog/standalone-hero/art/situations/
