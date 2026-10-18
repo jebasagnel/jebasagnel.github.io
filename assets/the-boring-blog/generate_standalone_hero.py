@@ -391,7 +391,7 @@ html_template = f'''<!DOCTYPE html>
        ========================================================================== */
     .hero {{
       position: absolute;
-      top: clamp(20rem, 42vh, 24rem);
+      top: clamp(24rem, 52vh, 30rem);
       left: 0;
       right: 0;
       z-index: 30;
@@ -1002,9 +1002,15 @@ html_template = f'''<!DOCTYPE html>
     }});
 
     const morphMesh = new THREE.Mesh(planeGeom, morphMaterial);
-    morphMesh.scale.set(0.82, 0.82, 1);
-    morphMesh.position.set(0, 0.4, 0);
     scene.add(morphMesh);
+
+    const compactViewport = window.matchMedia('(max-width: 640px)');
+    function frameCharacter() {{
+      const scale = compactViewport.matches ? 0.82 : 0.68;
+      morphMesh.scale.set(scale, scale, 1);
+      morphMesh.position.set(0, compactViewport.matches ? 0.4 : 0.95, 0);
+    }}
+    frameCharacter();
 
     // 4. Stylized Meadow Ground & Circular Border
     const groundGeom = new THREE.CircleGeometry(8.5, 64);
@@ -1315,6 +1321,7 @@ html_template = f'''<!DOCTYPE html>
 
     // Resize Handler
     window.addEventListener('resize', () => {{
+      frameCharacter();
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
