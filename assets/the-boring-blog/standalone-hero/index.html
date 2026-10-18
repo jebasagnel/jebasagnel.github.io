@@ -405,7 +405,7 @@
     .hero {
       position: absolute;
       top: auto;
-      bottom: clamp(14rem, 32vh, 21rem);
+      bottom: clamp(14rem, 30vh, 21rem);
       left: 0;
       right: 0;
       z-index: 30;
@@ -426,7 +426,7 @@
       margin-bottom: 0.6rem;
       padding: 0.04em 0.16em 0.08em;
       border-radius: 0.12em;
-      background: rgba(var(--paper-rgb), 0.42);
+      background: rgba(var(--paper-rgb), 0.94);
       -webkit-backdrop-filter: blur(3px);
       backdrop-filter: blur(3px);
       box-shadow: 0 8px 32px rgba(var(--ink-rgb), 0.04);
@@ -450,7 +450,7 @@
       margin-bottom: 0.6rem;
       padding: 0.35em 0.8em;
       border-radius: 0.5em;
-      background: rgba(var(--paper-rgb), 0.36);
+      background: rgba(var(--paper-rgb), 0.88);
       -webkit-backdrop-filter: blur(3px);
       backdrop-filter: blur(3px);
       pointer-events: auto;
@@ -791,7 +791,7 @@
       }
     }
 
-    @media (max-width: 640px) and (max-height: 480px) {
+    @media (max-width: 640px) and (max-height: 600px) {
       .hero__blurb {
         display: none;
       }
@@ -799,7 +799,7 @@
 
     @media (min-width: 641px) and (max-height: 760px) {
       .hero {
-        bottom: clamp(14rem, 32vh, 21rem);
+        bottom: clamp(14rem, 30vh, 21rem);
       }
 
       .hero__word {
@@ -814,7 +814,7 @@
 
     @media (min-width: 641px) and (max-height: 560px) {
       .hero {
-        bottom: clamp(14rem, 32vh, 21rem);
+        bottom: clamp(14rem, 30vh, 21rem);
       }
 
       .hero__word {
@@ -1070,6 +1070,8 @@
 
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
+    const meadow = new THREE.Group();
+    scene.add(meadow);
     const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 4.2, 14.5);
     camera.lookAt(0, 1.2, 0);
@@ -1196,15 +1198,19 @@
     });
 
     const morphMesh = new THREE.Mesh(planeGeom, morphMaterial);
-    scene.add(morphMesh);
+    meadow.add(morphMesh);
 
     const compactViewport = window.matchMedia('(max-width: 640px)');
     let curSit = 0;
     function frameCharacter(ground = SITUATIONS[curSit].ground) {
-      const scale = compactViewport.matches ? 0.58 : 0.68;
-      const groundLine = 0.95;
+      const referenceScale = compactViewport.matches ? 0.58 : 0.68;
+      const scale = compactViewport.matches ? 0.4 : 0.52;
+      const groundLine = 0.95 + 8 * ground * (referenceScale - 1);
+      meadow.position.y = compactViewport.matches
+        ? (window.matchMedia('(max-height: 600px)').matches ? 1.95 : 0.95)
+        : 0.65;
       morphMesh.scale.set(scale, scale, 1);
-      morphMesh.position.set(0, scale * 4 - ground * 8 + groundLine, 0);
+      morphMesh.position.set(0, groundLine + scale * (4 - ground * 8), 0);
     }
     frameCharacter();
 
@@ -1218,7 +1224,7 @@
     const groundMesh = new THREE.Mesh(groundGeom, groundMat);
     groundMesh.rotation.x = -Math.PI / 2;
     groundMesh.position.y = -0.05;
-    scene.add(groundMesh);
+    meadow.add(groundMesh);
 
     // Meadow ring edge
     const ringGeom = new THREE.RingGeometry(8.4, 8.5, 64);
@@ -1231,7 +1237,7 @@
     const ringMesh = new THREE.Mesh(ringGeom, ringMat);
     ringMesh.rotation.x = -Math.PI / 2;
     ringMesh.position.y = -0.04;
-    scene.add(ringMesh);
+    meadow.add(ringMesh);
 
     // 5. Tapered meadow blades, with per-blade wind and flower clusters
     const bladeGeom = new THREE.BufferGeometry();
@@ -1284,7 +1290,7 @@
     }
     instancedGrass.instanceMatrix.needsUpdate = true;
     instancedGrass.instanceColor.needsUpdate = true;
-    scene.add(instancedGrass);
+    meadow.add(instancedGrass);
 
     const flowerCount = 48;
     const flowerStems = new THREE.InstancedMesh(
@@ -1344,7 +1350,7 @@
     flowerPetals.instanceMatrix.needsUpdate = true;
     flowerPetals.instanceColor.needsUpdate = true;
     flowerCenters.instanceMatrix.needsUpdate = true;
-    scene.add(flowerStems, flowerPetals, flowerCenters);
+    meadow.add(flowerStems, flowerPetals, flowerCenters);
 
     // 6. Transition State Controller
     let nextSit = 0;
