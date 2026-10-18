@@ -5,7 +5,8 @@ Static portfolio website built with HTML, CSS, and JavaScript.
 The homepage opens with an interactive animated introduction. Drag the scene,
 use the category controls, or select **Enter portfolio** to continue to the
 portfolio; the introduction and portfolio share the same typography, palette,
-and saved light/dark theme.
+and saved light/dark theme. Touch controls have generous hit areas, and the
+scene slider supports keyboard arrows plus Home and End.
 
 ## Rebuild the animated introduction
 

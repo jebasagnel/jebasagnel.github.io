@@ -218,8 +218,18 @@ html_template = f'''<!DOCTYPE html>
       background: var(--active);
     }}
 
+    .btn:focus-visible,
+    .seam-btn:focus-visible,
+    .subject-pill:focus-visible,
+    .track__bar:focus-visible,
+    .stage:focus-visible {{
+      outline: 3px solid var(--primary);
+      outline-offset: 3px;
+    }}
+
     .btn-icon {{
-      width: 3em;
+      width: 3.25rem;
+      height: 3.25rem;
       padding: 0;
       border: 1px solid var(--line-control);
     }}
@@ -391,7 +401,7 @@ html_template = f'''<!DOCTYPE html>
        ========================================================================== */
     .hero {{
       position: absolute;
-      top: clamp(24rem, 52vh, 30rem);
+      top: clamp(28rem, 55vh, 80vh);
       left: 0;
       right: 0;
       z-index: 30;
@@ -405,11 +415,11 @@ html_template = f'''<!DOCTYPE html>
 
     .hero__word {{
       font-family: 'Portfolio Fraunces', Georgia, serif;
-      font-size: clamp(2.5rem, 6vw, 4.25rem);
+      font-size: clamp(2.5rem, 5.2vw, 3.75rem);
       font-weight: 400;
       letter-spacing: -0.03em;
       line-height: 1.1;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.6rem;
       padding: 0.04em 0.16em 0.08em;
       border-radius: 0.12em;
       background: rgba(var(--paper-rgb), 0.42);
@@ -429,11 +439,11 @@ html_template = f'''<!DOCTYPE html>
     }}
 
     .hero__blurb {{
-      font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
       color: var(--text-mid);
-      max-width: 32rem;
+      max-width: 38rem;
       line-height: 1.5;
-      margin-bottom: 1.75rem;
+      margin-bottom: 0.6rem;
       padding: 0.35em 0.8em;
       border-radius: 0.5em;
       background: rgba(var(--paper-rgb), 0.36);
@@ -467,17 +477,14 @@ html_template = f'''<!DOCTYPE html>
       display: block;
     }}
 
-    /* Situation active title pill overlay */
+    /* Active situation label */
     .situation-badge {{
-      position: absolute;
-      bottom: clamp(9.5rem, 18vh, 11rem);
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 35;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
       padding: 0.4rem 1.1rem;
+      max-width: calc(100vw - 2rem);
       background: rgba(var(--paper-rgb), 0.75);
       border: 1px solid var(--line-control);
       backdrop-filter: blur(12px);
@@ -533,9 +540,10 @@ html_template = f'''<!DOCTYPE html>
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.3rem 0.8rem;
+      min-height: 2.75rem;
+      padding: 0.45rem 1rem;
       border-radius: 9999px;
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       font-weight: 500;
       color: var(--text-mid);
       background: rgba(var(--paper-rgb), 0.6);
@@ -561,32 +569,45 @@ html_template = f'''<!DOCTYPE html>
     /* Track Bar */
     .track__bar {{
       width: clamp(220px, 32vw, 360px);
-      height: 6px;
-      background: var(--line-control);
+      height: 1.5rem;
       border-radius: 9999px;
       position: relative;
       cursor: pointer;
-      overflow: hidden;
+      touch-action: manipulation;
+    }}
+
+    .track__bar::before {{
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 8px;
+      transform: translateY(-50%);
+      background: var(--line-control);
+      border-radius: 9999px;
     }}
 
     .track__fill {{
       position: absolute;
       left: 0;
-      top: 0;
-      bottom: 0;
+      top: 50%;
+      height: 8px;
+      transform: translateY(-50%);
       width: 0%;
       background: var(--ink);
       border-radius: 9999px;
       transition: width 0.1s linear;
+      pointer-events: none;
     }}
 
     .track__meta {{
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
-      min-height: 2.25rem;
-      font-size: 0.75rem;
+      gap: 1.125rem;
+      min-height: 2.75rem;
+      font-size: 0.875rem;
       color: var(--text-mid);
     }}
 
@@ -598,7 +619,7 @@ html_template = f'''<!DOCTYPE html>
     .track__keys {{
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.5rem;
     }}
 
     @media (max-width: 640px) {{
@@ -617,20 +638,26 @@ html_template = f'''<!DOCTYPE html>
       }}
 
       .hero {{
-        top: 52vh;
+        top: 55vh;
       }}
 
       .hero__word {{
-        font-size: clamp(2rem, 9vw, 3rem);
+        font-size: clamp(1.9rem, 8.5vw, 2.3rem);
+        line-height: 1.02;
+        margin-bottom: 0.4rem;
       }}
 
       .hero__blurb {{
         max-width: 28rem;
-        font-size: 0.9rem;
+        font-size: 0.84rem;
+        line-height: 1.35;
+        margin-bottom: 0.5rem;
+        padding: 0.25em 0.65em;
       }}
 
       .situation-badge {{
-        bottom: calc(10rem + env(safe-area-inset-bottom));
+        font-size: 0.72rem;
+        padding: 0.35rem 0.9rem;
       }}
 
       .track {{
@@ -644,18 +671,20 @@ html_template = f'''<!DOCTYPE html>
       .subject-pills {{
         flex-wrap: wrap;
         justify-content: center;
-        gap: 0.3rem;
+        gap: 0.35rem;
         max-width: calc(100vw - 1rem);
       }}
 
       .subject-pill {{
-        padding: 0.28rem 0.62rem;
-        font-size: 0.68rem;
+        min-height: 2.75rem;
+        padding: 0.4rem 0.72rem;
+        font-size: 0.8rem;
       }}
 
       .track__meta {{
-        gap: 0.75rem;
-        font-size: 0.68rem;
+        gap: 0.875rem;
+        min-height: 2.75rem;
+        font-size: 0.8rem;
       }}
     }}
 
@@ -672,6 +701,39 @@ html_template = f'''<!DOCTYPE html>
         max-width: 24rem;
         margin-bottom: 0.85rem;
         font-size: 0.78rem;
+      }}
+    }}
+
+    @media (min-width: 641px) and (max-height: 760px) {{
+      .hero {{
+        top: clamp(16rem, 40vh, 19rem);
+      }}
+
+      .hero__word {{
+        font-size: clamp(2rem, 5vw, 3rem);
+      }}
+
+      .hero__blurb {{
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }}
+    }}
+
+    @media (min-width: 641px) and (min-height: 761px) and (max-height: 1200px) {{
+      .hero {{
+        top: 55vh;
+      }}
+
+      .hero__word {{
+        font-size: clamp(2.5rem, 4vw, 3rem);
+        line-height: 1.05;
+        margin-bottom: 0.35rem;
+      }}
+
+      .hero__blurb {{
+        font-size: clamp(0.9rem, 1.1vw, 1rem);
+        line-height: 1.4;
+        margin-bottom: 0.4rem;
       }}
     }}
 
@@ -762,7 +824,7 @@ html_template = f'''<!DOCTYPE html>
     <h1 class="hero__word">
       <span>From raw</span><em class="no"> noise</em><span> to clear insights.</span>
     </h1>
-    <p class="hero__blurb">I’m Jebas Agnel — a Data &amp; BI Engineer turning raw information into clear decisions. Take a little look around, then step into my portfolio.</p>
+    <p class="hero__blurb">I turn raw data into clear decisions. Explore the scenes, then step into my portfolio.</p>
     <p class="hero__go">
       <a class="seam-btn" href="../../../index.html#portfolio" target="_parent">
         <span class="seam-bg">
@@ -791,15 +853,15 @@ html_template = f'''<!DOCTYPE html>
   <!-- 3D Canvas Stage -->
   <div class="stage" id="stage" tabindex="0" role="application" aria-label="Explore Jebas’s animated data-world character. Use arrow keys or drag to explore."></div>
 
-  <!-- Active situation title pill -->
-  <div class="situation-badge" id="situation-badge">
-    <span class="dot"></span>
-    <span id="situation-name">A small creative break</span>
-  </div>
-
   <!-- Bottom Dial / Track Controller -->
   <div class="track">
     <div class="track__inner">
+      <!-- Active situation title pill -->
+      <div class="situation-badge" id="situation-badge">
+        <span class="dot"></span>
+        <span id="situation-name">A small creative break</span>
+      </div>
+
       <!-- Quadrant Subject Pills -->
       <div class="subject-pills">
         <button type="button" class="subject-pill active" data-slot="0">✦ Data</button>
@@ -809,7 +871,18 @@ html_template = f'''<!DOCTYPE html>
       </div>
 
       <!-- Scrub Bar -->
-      <div class="track__bar" id="track-bar">
+      <div
+        class="track__bar"
+        id="track-bar"
+        role="slider"
+        tabindex="0"
+        aria-label="Explore animated scenes"
+        aria-controls="stage"
+        aria-valuemin="1"
+        aria-valuemax="{len(situations)}"
+        aria-valuenow="1"
+        aria-valuetext="{situations[0]['name']}"
+      >
         <div class="track__fill" id="track-fill"></div>
       </div>
 
@@ -1005,10 +1078,12 @@ html_template = f'''<!DOCTYPE html>
     scene.add(morphMesh);
 
     const compactViewport = window.matchMedia('(max-width: 640px)');
-    function frameCharacter() {{
-      const scale = compactViewport.matches ? 0.82 : 0.68;
+    let curSit = 0;
+    function frameCharacter(ground = SITUATIONS[curSit].ground) {{
+      const scale = compactViewport.matches ? 0.58 : 0.68;
+      const groundLine = 0.95;
       morphMesh.scale.set(scale, scale, 1);
-      morphMesh.position.set(0, compactViewport.matches ? 0.4 : 0.95, 0);
+      morphMesh.position.set(0, scale * 4 - ground * 8 + groundLine, 0);
     }}
     frameCharacter();
 
@@ -1151,7 +1226,6 @@ html_template = f'''<!DOCTYPE html>
     scene.add(flowerStems, flowerPetals, flowerCenters);
 
     // 6. Transition State Controller
-    let curSit = 0;
     let nextSit = 0;
     let morphProgress = 0;
     let isTransitioning = false;
@@ -1169,6 +1243,8 @@ html_template = f'''<!DOCTYPE html>
       morphProgress = 0;
       isTransitioning = true;
       badgeName.textContent = SITUATIONS[nextSit].name;
+      trackBar.setAttribute('aria-valuenow', String(cleanNew + 1));
+      trackBar.setAttribute('aria-valuetext', SITUATIONS[nextSit].name);
 
       // Update quadrant pills
       subjectPills.forEach(p => {{
@@ -1212,6 +1288,20 @@ html_template = f'''<!DOCTYPE html>
       const bounds = trackBar.getBoundingClientRect();
       const progress = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
       const slot = Math.round(progress * (TOTAL_SLOTS - 1));
+      targetIndex = slot;
+      azimuth = -(slot / TOTAL_SLOTS) * (2 * Math.PI);
+      transitionTo(slot, Math.sign(slot - curSit) || 1);
+    }});
+    trackBar.addEventListener('keydown', (event) => {{
+      let slot = targetIndex;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowUp') slot = Math.min(TOTAL_SLOTS - 1, slot + 1);
+      else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') slot = Math.max(0, slot - 1);
+      else if (event.key === 'Home') slot = 0;
+      else if (event.key === 'End') slot = TOTAL_SLOTS - 1;
+      else return;
+
+      event.preventDefault();
+      event.stopPropagation();
       targetIndex = slot;
       azimuth = -(slot / TOTAL_SLOTS) * (2 * Math.PI);
       transitionTo(slot, Math.sign(slot - curSit) || 1);
@@ -1308,11 +1398,20 @@ html_template = f'''<!DOCTYPE html>
         }}
       }}
 
+      const characterGround = isTransitioning
+        ? THREE.MathUtils.lerp(
+            morphMaterial.uniforms.grounds.value.x,
+            morphMaterial.uniforms.grounds.value.y,
+            morphProgress
+          )
+        : SITUATIONS[curSit].ground;
+      frameCharacter(characterGround);
+
       // Sway grass with gentle wind wave
       if (grassShader) grassShader.uniforms.time.value = time;
 
       // Update scrub bar
-      const normProgress = ((targetIndex / TOTAL_SLOTS) * 100);
+      const normProgress = ((targetIndex / (TOTAL_SLOTS - 1)) * 100);
       trackFill.style.width = normProgress + '%';
 
       renderer.render(scene, camera);
