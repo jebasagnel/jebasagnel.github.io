@@ -85,6 +85,8 @@
       color: var(--ink);
       overflow: hidden;
       height: 100vh;
+      height: 100dvh;
+      min-height: 100svh;
       width: 100vw;
       user-select: none;
       -webkit-user-select: none;
@@ -402,7 +404,8 @@
        ========================================================================== */
     .hero {
       position: absolute;
-      top: clamp(28rem, 55vh, 80vh);
+      top: auto;
+      bottom: clamp(14rem, 32vh, 21rem);
       left: 0;
       right: 0;
       z-index: 30;
@@ -652,7 +655,8 @@
       }
 
       .hero {
-        top: 55vh;
+        top: auto;
+        bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 206px);
       }
 
       .hero__word {
@@ -704,7 +708,8 @@
 
     @media (max-width: 640px) and (max-height: 700px) {
       .hero {
-        top: clamp(9rem, 32vh, 14rem);
+        top: auto;
+        bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 198px);
       }
 
       .hero__word {
@@ -713,7 +718,7 @@
 
       .hero__blurb {
         max-width: 24rem;
-        margin-bottom: 0.85rem;
+        margin-bottom: 0.45rem;
         font-size: 0.78rem;
       }
     }
@@ -741,15 +746,18 @@
 
     @media (max-width: 640px) and (max-height: 560px) {
       .hero {
-        top: clamp(6.5rem, 26vh, 8rem);
+        bottom: calc(max(0.4rem, env(safe-area-inset-bottom)) + 188px);
       }
 
       .hero__word {
         font-size: clamp(1.65rem, 7.5vw, 2rem);
+        margin-bottom: 0.25rem;
       }
 
       .hero__blurb {
         max-width: 25rem;
+        margin-bottom: 0.3rem;
+        padding-block: 0.2em;
         font-size: 0.76rem;
       }
 
@@ -771,9 +779,27 @@
       }
     }
 
+    @media (max-width: 340px) and (max-height: 700px) {
+      .hero {
+        bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 238px);
+      }
+    }
+
+    @media (max-width: 340px) and (max-height: 560px) {
+      .hero {
+        bottom: calc(max(0.4rem, env(safe-area-inset-bottom)) + 232px);
+      }
+    }
+
+    @media (max-width: 640px) and (max-height: 480px) {
+      .hero__blurb {
+        display: none;
+      }
+    }
+
     @media (min-width: 641px) and (max-height: 760px) {
       .hero {
-        top: clamp(13rem, 35vh, 16rem);
+        bottom: clamp(14rem, 32vh, 21rem);
       }
 
       .hero__word {
@@ -786,9 +812,26 @@
       }
     }
 
+    @media (min-width: 641px) and (max-height: 560px) {
+      .hero {
+        bottom: clamp(14rem, 32vh, 21rem);
+      }
+
+      .hero__word {
+        font-size: clamp(1.65rem, 4vw, 2.25rem);
+        margin-bottom: 0.3rem;
+      }
+
+      .hero__blurb {
+        max-width: 34rem;
+        margin-bottom: 0.3rem;
+        font-size: 0.8rem;
+      }
+    }
+
     @media (min-width: 641px) and (min-height: 761px) and (max-height: 1200px) {
       .hero {
-        top: 55vh;
+        bottom: clamp(14rem, 32vh, 21rem);
       }
 
       .hero__word {
