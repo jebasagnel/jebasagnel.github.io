@@ -2,6 +2,17 @@
 
 Static portfolio website built with HTML, CSS, and JavaScript.
 
+The homepage opens with an interactive animated introduction. Drag the scene,
+use the category controls, or select **Enter portfolio** to continue to the
+portfolio; the introduction and portfolio share the same typography, palette,
+and saved light/dark theme.
+
+## Rebuild the animated introduction
+
+From the repository root, run `python assets/the-boring-blog/generate_standalone_hero.py`.
+The generator writes `assets/the-boring-blog/standalone-hero/index.html` using
+the 24 situations in `situations_clean.json` and their optimized WebP textures.
+
 ## Update the résumé
 
 Replace `New Resume Box/Jebas-Agnel-Resume.pdf` with the new résumé and keep
@@ -19,9 +30,9 @@ publishes the update automatically.
    each push. For the `jebasagnel.github.io` repository, the site address is
    `https://jebasagnel.github.io/`.
 
-The deployed site includes only the page, its local CSS/JavaScript, fonts,
-favicon, audio, and résumé. The original downloaded reference-site files and
-the `info` folder are excluded from Git.
+The Pages workflow publishes the portfolio, the generated introduction and its
+optimized character/sky images, local fonts, favicon, audio, and résumé. It
+does not copy the downloaded reference-site archive into the published site.
 
 ## Music rights
 

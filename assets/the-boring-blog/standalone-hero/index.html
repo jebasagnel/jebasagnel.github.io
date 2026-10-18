@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jebas Agnel — Data &amp; BI Engineer</title>
+  <link rel="icon" href="../../../icons/favicon.png" type="image/png" />
+  <link rel="preload" href="../../fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fonts/geist-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       THEME & DESIGN SYSTEM TOKENS
+       ========================================================================== */
+    :root {
+      --paper: #faf8f2;
+      --paper-rgb: 250, 248, 242;
+      --ink: #14181c;
+      --ink-rgb: 20, 24, 28;
+      --night: 0;
+      --gold: 0;
+      --primary: #80977b;
+      --primary-hover: #71896c;
+      --primary-active: #63795e;
+      --primary-line: rgba(128, 151, 123, 0.4);
+      --primary-text: #ffffff;
+      --accent: #c49a61;
+      --accent-hover: #b4874f;
+      --accent-active: #9f7541;
+      --accent-text: #ffffff;
+      --line-control: rgba(34, 37, 30, 0.12);
+      --hover: rgba(34, 37, 30, 0.05);
+      --active: rgba(34, 37, 30, 0.1);
+      --text-high: #22251e;
+      --text-mid: #686c63;
+      --text-low: #9da098;
+      --radius-control: 1.5em;
+      --stroke-thick: 2px;
+      --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+      --duration-fast: 150ms;
+      --duration-normal: 250ms;
+    }
+
+    html.dark {
+      --paper: #14181c;
+      --paper-rgb: 20, 24, 28;
+      --ink: #f0ede6;
+      --ink-rgb: 240, 237, 230;
+      --night: 1;
+      --gold: 0;
+      --line-control: rgba(240, 237, 230, 0.14);
+      --hover: rgba(240, 237, 230, 0.08);
+      --active: rgba(240, 237, 230, 0.15);
+      --text-high: #f0ede6;
+      --text-mid: #9ba097;
+      --text-low: #656960;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    @font-face {
+      font-family: 'Portfolio Geist';
+      src: url('../../fonts/geist-variable.woff2') format('woff2');
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Portfolio Fraunces';
+      src: url('../../fonts/fraunces-variable.woff2') format('woff2');
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+    }
+
+    body {
+      font-family: 'Portfolio Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--paper);
+      color: var(--ink);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* ==========================================================================
+       SKY BACKGROUND
+       ========================================================================== */
+    .sky {
+      position: fixed;
+      inset: 0;
+      height: 88vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: calc(0.35 * (1 - var(--night) * 0.25));
+      filter: brightness(calc(1 - var(--night) * 0.72)) saturate(calc(1 - var(--night) * 0.45 + var(--gold) * 0.35));
+      -webkit-mask-image: linear-gradient(#000 0 30%, rgba(0,0,0,0.5) 54%, transparent 70%);
+      mask-image: linear-gradient(#000 0 30%, rgba(0,0,0,0.5) 54%, transparent 70%);
+      transition: filter 0.4s ease, opacity 0.4s ease;
+    }
+
+    .sky img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 0%;
+    }
+
+    /* ==========================================================================
+       MAST (TOP NAVIGATION)
+       ========================================================================== */
+    .mast {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      pointer-events: auto;
+    }
+
+    .mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .mark__glyph {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .mark__say {
+      font-size: 0.75rem;
+      color: var(--text-high);
+      opacity: 1;
+      transform: translateX(0);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+    }
+
+    .mark:hover .mark__say {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .mast__end {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+
+    /* ==========================================================================
+       CONTROLS & BUTTONS WITH SPLIT SEAM & ICON SWAP
+       ========================================================================== */
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 3em;
+      border-radius: var(--radius-control);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-high);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color var(--duration-fast) var(--ease-standard), background var(--duration-fast);
+      overflow: hidden;
+    }
+
+    .btn:hover {
+      background: var(--hover);
+    }
+
+    .btn:active {
+      background: var(--active);
+    }
+
+    .btn-icon {
+      width: 3em;
+      padding: 0;
+      border: 1px solid var(--line-control);
+    }
+
+    .btn-text {
+      padding: 0 1.25em;
+    }
+
+    /* Split Seam Button (Read the blog / Subscribe) */
+    .seam-btn {
+      --seam-travel: 0.35em;
+      --seam-gap: 0px;
+      --seam-edge: var(--primary-line);
+      --seam-inner: transparent;
+      display: inline-flex;
+      align-items: center;
+      height: 3em;
+      border-radius: var(--radius-control);
+      color: var(--primary-text);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: color var(--duration-fast) var(--ease-standard);
+    }
+
+    .seam-btn:hover {
+      --seam-gap: var(--seam-travel);
+      --seam-inner: var(--seam-edge);
+    }
+
+    .seam-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: stretch;
+      pointer-events: none;
+    }
+
+    .seam-bg-left {
+      position: relative;
+      flex: 1;
+    }
+
+    .seam-bg-left::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      right: calc(var(--seam-gap) / 2);
+      background: var(--primary);
+      border-radius: var(--radius-control) 0 0 var(--radius-control);
+      box-shadow: inset 0 1px 0 0 var(--seam-edge), inset 0 -1px 0 0 var(--seam-edge), inset 1px 0 0 0 var(--seam-edge), inset -1px 0 0 0 var(--seam-inner);
+      transition: all var(--duration-normal) var(--ease-standard);
+    }
+
+    .seam-btn:hover .seam-bg-left::before {
+      border-radius: var(--radius-control);
+      background: var(--primary-hover);
+    }
+
+    .seam-bg-right {
+      position: relative;
+      width: 3em;
+      flex-shrink: 0;
+      margin-left: -1px;
+    }
+
+    .seam-bg-right::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      left: calc(var(--seam-gap) / 2);
+      background: var(--primary);
+      border-radius: 0 var(--radius-control) var(--radius-control) 0;
+      box-shadow: inset 0 1px 0 0 var(--seam-edge), inset 0 -1px 0 0 var(--seam-edge), inset 1px 0 0 0 var(--seam-inner), inset -1px 0 0 0 var(--seam-edge);
+      transition: all var(--duration-normal) var(--ease-standard);
+    }
+
+    .seam-btn:hover .seam-bg-right::before {
+      border-radius: 1.5em;
+      background: var(--primary-hover);
+    }
+
+    .seam-label {
+      position: relative;
+      z-index: 10;
+      padding: 0 1.25em;
+    }
+
+    .seam-arrow {
+      position: relative;
+      z-index: 10;
+      width: 3em;
+      height: 3em;
+      display: grid;
+      place-items: center;
+    }
+
+    /* Icon translation swap */
+    .icon-swap {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+
+    .icon-swap > span {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .icon-swap > span:first-child {
+      transform: translateX(0);
+    }
+
+    .icon-swap > span:last-child {
+      transform: translateX(-140%);
+    }
+
+    .seam-btn:hover .icon-swap > span:first-child,
+    .btn:hover .icon-swap > span:first-child {
+      transform: translateX(140%);
+    }
+
+    .seam-btn:hover .icon-swap > span:last-child,
+    .btn:hover .icon-swap > span:last-child {
+      transform: translateX(0);
+    }
+
+    /* Sun theme icon with bite mask */
+    .sun {
+      width: 18px;
+      height: 18px;
+    }
+
+    .sun__bite {
+      transition: cx 0.3s ease, cy 0.3s ease, r 0.3s ease;
+      cx: 19px;
+      cy: 2px;
+      r: 5.5px;
+    }
+
+    .dark .sun__bite {
+      cx: 14px;
+      cy: 6px;
+      r: 5.5px;
+    }
+
+    .sun__rays {
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      transform-origin: 10px 10px;
+    }
+
+    .dark .sun__rays {
+      opacity: 0;
+      transform: rotate(45deg) scale(0.5);
+    }
+
+    /* ==========================================================================
+       HERO CENTER SECTION
+       ========================================================================== */
+    .hero {
+      position: absolute;
+      top: clamp(20rem, 42vh, 24rem);
+      left: 0;
+      right: 0;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      pointer-events: none;
+      padding: 0 1rem;
+    }
+
+    .hero__word {
+      font-family: 'Portfolio Fraunces', Georgia, serif;
+      font-size: clamp(2.5rem, 6vw, 4.25rem);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+      padding: 0.04em 0.16em 0.08em;
+      border-radius: 0.12em;
+      background: rgba(var(--paper-rgb), 0.42);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+      box-shadow: 0 8px 32px rgba(var(--ink-rgb), 0.04);
+      pointer-events: auto;
+    }
+
+    .hero__word em.no {
+      font-style: italic;
+      color: var(--primary);
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      font-weight: 300;
+      opacity: 0.9;
+    }
+
+    .hero__blurb {
+      font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+      color: var(--text-mid);
+      max-width: 32rem;
+      line-height: 1.5;
+      margin-bottom: 1.75rem;
+      padding: 0.35em 0.8em;
+      border-radius: 0.5em;
+      background: rgba(var(--paper-rgb), 0.36);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+      pointer-events: auto;
+    }
+
+    .hero__go {
+      pointer-events: auto;
+    }
+
+    /* ==========================================================================
+       3D STAGE (WEBGL CANVAS CONTAINER)
+       ========================================================================== */
+    .stage {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      cursor: grab;
+      outline: none;
+    }
+
+    .stage:active {
+      cursor: grabbing;
+    }
+
+    .stage canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    /* Situation active title pill overlay */
+    .situation-badge {
+      position: absolute;
+      bottom: clamp(9.5rem, 18vh, 11rem);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 35;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1.1rem;
+      background: rgba(var(--paper-rgb), 0.75);
+      border: 1px solid var(--line-control);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-high);
+      pointer-events: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .situation-badge span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 8px var(--primary);
+    }
+
+    /* ==========================================================================
+       TRACK (BOTTOM DIAL & SLIDER)
+       ========================================================================== */
+    .track {
+      position: fixed;
+      bottom: max(1.25rem, env(safe-area-inset-bottom));
+      left: 0;
+      right: 0;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .track__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      pointer-events: auto;
+    }
+
+    /* Subject Jump Pills */
+    .subject-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .subject-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-mid);
+      background: rgba(var(--paper-rgb), 0.6);
+      border: 1px solid var(--line-control);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: all 0.2s var(--ease-standard);
+    }
+
+    .subject-pill:hover {
+      background: var(--hover);
+      color: var(--text-high);
+      transform: translateY(-1px);
+    }
+
+    .subject-pill.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    /* Track Bar */
+    .track__bar {
+      width: clamp(220px, 32vw, 360px);
+      height: 6px;
+      background: var(--line-control);
+      border-radius: 9999px;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .track__fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0%;
+      background: var(--ink);
+      border-radius: 9999px;
+      transition: width 0.1s linear;
+    }
+
+    .track__meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      min-height: 2.25rem;
+      font-size: 0.75rem;
+      color: var(--text-mid);
+    }
+
+    .track__meta p {
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .track__keys {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    @media (max-width: 640px) {
+      .mast {
+        padding: 1rem;
+      }
+
+      .mark__say {
+        max-width: 8rem;
+        font-size: 0.62rem;
+      }
+
+      .mast__end > #audio-btn,
+      .mast__end > .btn-text {
+        display: none;
+      }
+
+      .hero {
+        top: 52vh;
+      }
+
+      .hero__word {
+        font-size: clamp(2rem, 9vw, 3rem);
+      }
+
+      .hero__blurb {
+        max-width: 28rem;
+        font-size: 0.9rem;
+      }
+
+      .situation-badge {
+        bottom: calc(10rem + env(safe-area-inset-bottom));
+      }
+
+      .track {
+        bottom: max(0.75rem, env(safe-area-inset-bottom));
+      }
+
+      .track__inner {
+        gap: 0.4rem;
+      }
+
+      .subject-pills {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.3rem;
+        max-width: calc(100vw - 1rem);
+      }
+
+      .subject-pill {
+        padding: 0.28rem 0.62rem;
+        font-size: 0.68rem;
+      }
+
+      .track__meta {
+        gap: 0.75rem;
+        font-size: 0.68rem;
+      }
+    }
+
+    @media (max-width: 640px) and (max-height: 700px) {
+      .hero {
+        top: 35vh;
+      }
+
+      .hero__word {
+        font-size: clamp(1.8rem, 8vw, 2.35rem);
+      }
+
+      .hero__blurb {
+        max-width: 24rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.78rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sky panorama -->
+  <div class="sky" aria-hidden="true">
+    <img src="sky/dawn.webp" alt="" />
+  </div>
+
+  <!-- Mast Header -->
+  <header class="mast">
+    <div class="mark">
+      <svg class="mark__glyph" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 22c0-5.4.9-9.4 2.6-12.1"></path>
+        <path d="M12 22c0-4.6-1.1-8-3.2-10.4"></path>
+        <path d="M12 22c1.3-3.6 3.6-6.2 6.9-7.8"></path>
+        <path d="M12 22c-1.5-3.1-3.9-5.2-7-6.4"></path>
+        <path d="M12 22V9.4"></path>
+      </svg>
+      <span class="mark__say">Jebas Agnel · Data &amp; BI Engineer</span>
+    </div>
+
+    <div class="mast__end">
+      <!-- Theme Switch Button -->
+      <button type="button" class="btn btn-icon" id="theme-btn" aria-label="Toggle sun" title="Put the sun down">
+        <svg class="sun" viewBox="0 0 20 20" aria-hidden="true">
+          <mask id="sun-bite">
+            <rect width="20" height="20" fill="#fff"></rect>
+            <circle class="sun__bite" cx="19" cy="2" r="5.5" fill="#000"></circle>
+          </mask>
+          <circle cx="10" cy="10" r="5" fill="currentColor" mask="url(#sun-bite)"></circle>
+          <g class="sun__rays" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+            <path d="M10 1.4v1.6M10 17v1.6M18.6 10H17M3 10H1.4"></path>
+            <path d="M16.1 3.9l-1.1 1.1M5 15l-1.1 1.1M16.1 16.1L15 15M5 5L3.9 3.9"></path>
+          </g>
+        </svg>
+      </button>
+
+      <!-- Audio Ambiance Button -->
+      <button type="button" class="btn btn-icon" id="audio-btn" aria-label="Toggle meadow audio" title="Play meadow ambiance">
+        <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 8v4h3l4 3V5L7 8H4z"></path>
+          <path d="M14.5 7a4 4 0 0 1 0 6"></path>
+        </svg>
+      </button>
+
+      <!-- Posts Link -->
+      <a class="btn btn-text" href="../../../index.html#portfolio" target="_parent">Portfolio</a>
+
+      <!-- Subscribe Button -->
+      <a class="seam-btn" href="../../../index.html#portfolio" target="_parent">
+        <span class="seam-bg">
+          <span class="seam-bg-left"></span>
+          <span class="seam-bg-right"></span>
+        </span>
+        <span class="seam-label">Meet Jebas</span>
+        <span class="seam-arrow">
+          <span class="icon-swap">
+            <span>
+              <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3.5" width="12" height="9" rx="1.5"></rect>
+                <path d="M2.6 5.2 8 8.9l5.4-3.7"></path>
+              </svg>
+            </span>
+            <span>
+              <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3.5" width="12" height="9" rx="1.5"></rect>
+                <path d="M2.6 5.2 8 8.9l5.4-3.7"></path>
+              </svg>
+            </span>
+          </span>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Headline -->
+  <section class="hero">
+    <h1 class="hero__word">
+      <span>From raw</span><em class="no"> noise</em><span> to clear insights.</span>
+    </h1>
+    <p class="hero__blurb">I’m Jebas Agnel — a Data &amp; BI Engineer turning raw information into clear decisions. Take a little look around, then step into my portfolio.</p>
+    <p class="hero__go">
+      <a class="seam-btn" href="../../../index.html#portfolio" target="_parent">
+        <span class="seam-bg">
+          <span class="seam-bg-left"></span>
+          <span class="seam-bg-right"></span>
+        </span>
+        <span class="seam-label">Enter portfolio</span>
+        <span class="seam-arrow">
+          <span class="icon-swap">
+            <span>
+              <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 8h10M9 4l4 4-4 4"></path>
+              </svg>
+            </span>
+            <span>
+              <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 8h10M9 4l4 4-4 4"></path>
+              </svg>
+            </span>
+          </span>
+        </span>
+      </a>
+    </p>
+  </section>
+
+  <!-- 3D Canvas Stage -->
+  <div class="stage" id="stage" tabindex="0" role="application" aria-label="Explore Jebas’s animated data-world character. Use arrow keys or drag to explore."></div>
+
+  <!-- Active situation title pill -->
+  <div class="situation-badge" id="situation-badge">
+    <span class="dot"></span>
+    <span id="situation-name">A small creative break</span>
+  </div>
+
+  <!-- Bottom Dial / Track Controller -->
+  <div class="track">
+    <div class="track__inner">
+      <!-- Quadrant Subject Pills -->
+      <div class="subject-pills">
+        <button type="button" class="subject-pill active" data-slot="0">✦ Data</button>
+        <button type="button" class="subject-pill" data-slot="6">❖ AI</button>
+        <button type="button" class="subject-pill" data-slot="12">⚙ BI</button>
+        <button type="button" class="subject-pill" data-slot="18">☘ Journey</button>
+      </div>
+
+      <!-- Scrub Bar -->
+      <div class="track__bar" id="track-bar">
+        <div class="track__fill" id="track-fill"></div>
+      </div>
+
+      <!-- Turn Controls -->
+      <div class="track__meta">
+        <p>Drag to turn</p>
+        <div class="track__keys">
+          <button type="button" class="btn btn-icon" id="turn-left" aria-label="Turn left">
+            <span class="icon-swap">
+              <span>
+                <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 6H2M5 3 2 6l3 3"></path>
+                </svg>
+              </span>
+              <span>
+                <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 6H2M5 3 2 6l3 3"></path>
+                </svg>
+              </span>
+            </span>
+          </button>
+          <button type="button" class="btn btn-icon" id="turn-right" aria-label="Turn right">
+            <span class="icon-swap">
+              <span>
+                <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);">
+                  <path d="M10 6H2M5 3 2 6l3 3"></path>
+                </svg>
+              </span>
+              <span>
+                <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);">
+                  <path d="M10 6H2M5 3 2 6l3 3"></path>
+                </svg>
+              </span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       THREE.JS WEBGL RBF CHARACTER MORPH & MEADOW ENGINE
+       ========================================================================== -->
+  <script>
+    const SITUATIONS = [{"name": "A small creative break", "src": "creative-break-v1.png", "ground": 0.395, "landmarks": [[0.4, 0.683], [0.397, 0.507], [0.51, 0.3], [0.692, 0.359], [0.792, 0.328]]}, {"name": "An unscheduled collaborator", "src": "cat-on-keyboard-v1.png", "ground": 0.35, "landmarks": [[0.363, 0.692], [0.368, 0.49], [0.408, 0.267], [0.748, 0.406], [0.675, 0.4]]}, {"name": "A very small observatory", "src": "tiny-observatory-v1.png", "ground": 0.38, "landmarks": [[0.303, 0.697], [0.26, 0.5], [0.25, 0.27], [0.716, 0.585], [0.78, 0.395]]}, {"name": "The book has been claimed", "src": "claimed-book-v1.png", "ground": 0.4, "landmarks": [[0.34, 0.7], [0.35, 0.47], [0.31, 0.25], [0.615, 0.32], [0.715, 0.365]]}, {"name": "A very small flight school", "src": "paper-pilot-v1.png", "ground": 0.35, "landmarks": [[0.33, 0.71], [0.35, 0.5], [0.38, 0.25], [0.68, 0.57], [0.73, 0.36]]}, {"name": "An unexpected duet", "src": "piano-duet-v1.png", "ground": 0.35, "landmarks": [[0.33, 0.69], [0.33, 0.49], [0.3, 0.25], [0.72, 0.55], [0.78, 0.37]]}, {"name": "The camera inspector", "src": "camera-inspector-v1.png", "ground": 0.395, "landmarks": [[0.395, 0.72], [0.335, 0.5], [0.32, 0.25], [0.56, 0.6], [0.69, 0.38]]}, {"name": "The missing lunch", "src": "picnic-thief-v1.png", "ground": 0.36, "landmarks": [[0.33, 0.72], [0.35, 0.5], [0.29, 0.25], [0.715, 0.54], [0.775, 0.38]]}, {"name": "Quality control", "src": "robot-inspector-v1.png", "ground": 0.35, "landmarks": [[0.33, 0.69], [0.33, 0.49], [0.3, 0.25], [0.72, 0.55], [0.78, 0.37]]}, {"name": "Wet paint", "src": "wet-paint-v1.png", "ground": 0.35, "landmarks": [[0.33, 0.69], [0.33, 0.49], [0.3, 0.25], [0.72, 0.55], [0.78, 0.37]]}, {"name": "Checkmate, apparently", "src": "cat-checkmate-v1.png", "morphTravel": 0.065, "ground": 0.35, "landmarks": [[0.36, 0.69], [0.32, 0.49], [0.3, 0.25], [0.68, 0.56], [0.76, 0.36]]}, {"name": "A tangled hobby", "src": "tangled-hobby-v1.png", "ground": 0.34, "landmarks": [[0.33, 0.69], [0.33, 0.49], [0.3, 0.25], [0.665, 0.41], [0.78, 0.34]]}, {"name": "Rain for two", "src": "rain-for-two-v1.png", "ground": 0.35, "landmarks": [[0.35, 0.64], [0.34, 0.46], [0.34, 0.24], [0.61, 0.41], [0.69, 0.27]]}, {"name": "Do not disturb", "src": "do-not-disturb-v1.png", "morphTravel": 0.065, "ground": 0.26, "landmarks": [[0.2, 0.65], [0.28, 0.44], [0.72, 0.3], [0.3, 0.59], [0.4, 0.48]]}, {"name": "An ambitious tower", "src": "block-tower-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.32, 0.7], [0.29, 0.49], [0.3, 0.25], [0.71, 0.49], [0.78, 0.31]]}, {"name": "Box beats gift", "src": "box-beats-gift-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.32, 0.71], [0.32, 0.49], [0.32, 0.24], [0.72, 0.5], [0.76, 0.33]]}, {"name": "Bubble inspector", "src": "bubble-inspector-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.29, 0.72], [0.31, 0.48], [0.33, 0.24], [0.72, 0.62], [0.74, 0.36]]}, {"name": "Pottery assistant", "src": "pottery-assistant-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.35, 0.7], [0.32, 0.49], [0.29, 0.24], [0.68, 0.58], [0.77, 0.32]]}, {"name": "A familiar giant", "src": "familiar-giant-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.26, 0.67], [0.23, 0.47], [0.22, 0.24], [0.5, 0.55], [0.47, 0.34]]}, {"name": "Cloud delivery", "src": "cloud-delivery-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.28, 0.7], [0.27, 0.48], [0.29, 0.24], [0.67, 0.52], [0.78, 0.51]]}, {"name": "The laundry portal", "src": "laundry-portal-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.4, 0.69], [0.33, 0.48], [0.28, 0.24], [0.61, 0.76], [0.74, 0.76]]}, {"name": "Borrowed moonlight", "src": "borrowed-moonlight-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.34, 0.69], [0.32, 0.48], [0.32, 0.24], [0.64, 0.45], [0.75, 0.38]]}, {"name": "A very slow voyage", "src": "slow-voyage-v1.png", "ground": 0.38, "morphTravel": 0.05, "landmarks": [[0.33, 0.7], [0.33, 0.49], [0.4, 0.35], [0.67, 0.51], [0.69, 0.36]]}, {"name": "Stars on the line", "src": "stars-on-line-v1.png", "ground": 0.35, "morphTravel": 0.05, "landmarks": [[0.25, 0.7], [0.23, 0.49], [0.26, 0.24], [0.77, 0.52], [0.81, 0.33]]}];
+
+    // Landmark sigma radiuses
+    const SIGMAS = [0.18, 0.17, 0.2, 0.14, 0.19];
+
+    // State
+    let targetIndex = 0;
+    let turnVelocity = 0;
+    let isDragging = false;
+    let lastPointerX = 0;
+    let azimuth = 0; // in radians
+    const TOTAL_SLOTS = 24;
+
+    // DOM Elements
+    const stageContainer = document.getElementById('stage');
+    const badgeName = document.getElementById('situation-name');
+    const trackFill = document.getElementById('track-fill');
+    const trackBar = document.getElementById('track-bar');
+    const subjectPills = document.querySelectorAll('.subject-pill');
+
+    // 1. Scene, Camera, Renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 4.2, 14.5);
+    camera.lookAt(0, 1.2, 0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+    stageContainer.appendChild(renderer.domElement);
+
+    // 2. Texture Loader & Situations Preload
+    const textureLoader = new THREE.TextureLoader();
+    const textures = SITUATIONS.map(s => {
+      const tex = textureLoader.load('art/situations/' + s.src.replace(/\.png$/, '.webp'));
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    });
+
+    // 3. Morphing Character Plane Mesh
+    // 100 x 68 grid vertices for smooth landmark deformation
+    const planeGeom = new THREE.PlaneGeometry(12, 8, 100, 68);
+    const uvAttr = planeGeom.getAttribute('uv');
+    const targetUVAttr = new THREE.BufferAttribute(new Float32Array(uvAttr.array), 2);
+    planeGeom.setAttribute('targetUV', targetUVAttr);
+
+    // RBF Morphing UV Mapping Function
+    function mapLandmarks(currentSit, nextSit) {
+      for (let a = 0; a < uvAttr.count; a++) {
+        const u = uvAttr.getX(a);
+        const v = uvAttr.getY(a);
+        let dx = 0, dy = 0, totalWeight = 0;
+
+        for (let i = 0; i < SIGMAS.length; i++) {
+          const r = currentSit.landmarks[i];
+          const l = nextSit.landmarks[i];
+          const distSq = (u - r[0]) ** 2 + (v - r[1]) ** 2;
+          const w = Math.exp(-distSq / (SIGMAS[i] * SIGMAS[i] * 0.5));
+          const travel = Math.min(1, Math.min(currentSit.morphTravel || 0.08, nextSit.morphTravel || 0.08) / Math.max(0.001, Math.hypot(l[0] - r[0], l[1] - r[1])));
+          dx += (l[0] - r[0]) * w * travel;
+          dy += (l[1] - r[1]) * w * travel;
+          totalWeight += w;
+        }
+
+        const edgeMask = Math.min(1, 12 * Math.min(u, v, 1 - u, 1 - v));
+        targetUVAttr.setXY(a, u + (dx / Math.max(1, totalWeight)) * edgeMask, v + (dy / Math.max(1, totalWeight)) * edgeMask);
+      }
+      targetUVAttr.needsUpdate = true;
+    }
+
+    // Custom Shaders
+    const vertexShader = `
+      attribute vec2 targetUV;
+      uniform float progress;
+      uniform vec2 grounds;
+      uniform float direction;
+      varying vec2 uvA;
+      varying vec2 uvB;
+      varying float blendAt;
+
+      void main() {
+        uvA = uv;
+        uvB = targetUV;
+        float delay = (direction > 0.0 ? uv.x : 1.0 - uv.x) * 0.06;
+        float t = smoothstep(delay, 0.94 + delay, progress);
+        blendAt = t;
+        vec2 movingUV = mix(uv, targetUV, t);
+        vec3 p = vec3((movingUV - 0.5) * vec2(12.0, 8.0), 0.0);
+        p.y += mix(grounds.x, grounds.y, t) * 8.0;
+        float arc = sin(t * 3.14159265);
+        p.x += direction * arc * 0.26 * sin(uv.y * 3.14159265);
+        p.y += arc * 0.06;
+        p.z += arc * 0.24 * sin(uv.x * 3.14159265);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+      }
+    `;
+
+    const fragmentShader = `
+      uniform sampler2D mapA;
+      uniform sampler2D mapB;
+      uniform float opacity;
+      uniform float light;
+      varying vec2 uvA;
+      varying vec2 uvB;
+      varying float blendAt;
+
+      vec4 cutout(sampler2D source, vec2 uv) {
+        vec4 pixel = texture2D(source, uv);
+        float key = min(pixel.r, pixel.b) - pixel.g;
+        float a = (1.0 - smoothstep(0.12, 0.42, key)) * pixel.a;
+        vec3 clean = mix(pixel.rgb, vec3(pixel.r, pixel.g, min(pixel.b, pixel.g)), 1.0 - a);
+        return vec4(clean * a, a);
+      }
+
+      void main() {
+        vec4 a = cutout(mapA, uvA);
+        vec4 b = cutout(mapB, uvB);
+        float t = blendAt;
+        float paint = smoothstep(0.24, 0.76, t);
+        vec4 ink = mix(a, b, paint);
+        vec3 color = ink.rgb / max(ink.a, 0.001);
+        float body = sin(paint * 3.14159265);
+        float alpha = mix(ink.a, max(a.a, b.a), body * body * 0.88);
+        alpha *= opacity;
+        if (alpha < 0.04) discard;
+        gl_FragColor = vec4(color * light, alpha);
+      }
+    `;
+
+    const morphMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        mapA: { value: textures[0] },
+        mapB: { value: textures[1] },
+        progress: { value: 0 },
+        grounds: { value: new THREE.Vector2(SITUATIONS[0].ground, SITUATIONS[0].ground) },
+        opacity: { value: 1.0 },
+        light: { value: 1.0 },
+        direction: { value: 1.0 }
+      },
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+      transparent: true,
+      side: THREE.DoubleSide,
+      depthWrite: true
+    });
+
+    const morphMesh = new THREE.Mesh(planeGeom, morphMaterial);
+    morphMesh.scale.set(0.82, 0.82, 1);
+    morphMesh.position.set(0, 0.4, 0);
+    scene.add(morphMesh);
+
+    // 4. Stylized Meadow Ground & Circular Border
+    const groundGeom = new THREE.CircleGeometry(8.5, 64);
+    const groundMat = new THREE.MeshBasicMaterial({
+      color: 0x84a555,
+      transparent: true,
+      opacity: 0.85
+    });
+    const groundMesh = new THREE.Mesh(groundGeom, groundMat);
+    groundMesh.rotation.x = -Math.PI / 2;
+    groundMesh.position.y = -0.05;
+    scene.add(groundMesh);
+
+    // Meadow ring edge
+    const ringGeom = new THREE.RingGeometry(8.4, 8.5, 64);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: 0x4a5c37,
+      transparent: true,
+      opacity: 0.65,
+      side: THREE.DoubleSide
+    });
+    const ringMesh = new THREE.Mesh(ringGeom, ringMat);
+    ringMesh.rotation.x = -Math.PI / 2;
+    ringMesh.position.y = -0.04;
+    scene.add(ringMesh);
+
+    // 5. Tapered meadow blades, with per-blade wind and flower clusters
+    const bladeGeom = new THREE.BufferGeometry();
+    bladeGeom.setAttribute('position', new THREE.Float32BufferAttribute([
+      -0.035, 0, 0, 0.035, 0, 0,
+      -0.025, 0.25, 0, 0.025, 0.25, 0,
+      0.035, 0.48, 0, 0
+    ], 3));
+    bladeGeom.setIndex([0, 1, 2, 1, 3, 2, 2, 3, 4]);
+    bladeGeom.computeVertexNormals();
+
+    const bladeCount = 2600;
+    let grassShader;
+    const grassMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      side: THREE.DoubleSide
+    });
+    grassMaterial.onBeforeCompile = (shader) => {
+      shader.uniforms.time = { value: 0 };
+      shader.vertexShader = shader.vertexShader
+        .replace('#include <common>', '#include <common>\nuniform float time;')
+        .replace(
+          '#include <begin_vertex>',
+          '#include <begin_vertex>\ntransformed.x += sin(time * 0.85 + instanceMatrix[3][0] * 0.7 + instanceMatrix[3][2] * 0.55) * position.y * position.y * 0.16;'
+        );
+      grassShader = shader;
+    };
+
+    const instancedGrass = new THREE.InstancedMesh(
+      bladeGeom,
+      grassMaterial,
+      bladeCount
+    );
+
+    const dummy = new THREE.Object3D();
+    const bladeColor = new THREE.Color();
+    for (let i = 0; i < bladeCount; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 1.2 + Math.sqrt(Math.random()) * 6.8;
+      const x = Math.cos(angle) * dist;
+      const z = Math.sin(angle) * dist;
+      const scale = 0.35 + Math.random() * 0.55;
+      dummy.position.set(x, -0.045, z);
+      dummy.rotation.y = Math.random() * Math.PI;
+      dummy.scale.set(scale, scale * (0.75 + Math.random() * 0.5), scale);
+      dummy.updateMatrix();
+      instancedGrass.setMatrixAt(i, dummy.matrix);
+      bladeColor.setHSL(0.22 + Math.random() * 0.055, 0.24 + Math.random() * 0.18, 0.36 + Math.random() * 0.22);
+      instancedGrass.setColorAt(i, bladeColor);
+    }
+    instancedGrass.instanceMatrix.needsUpdate = true;
+    instancedGrass.instanceColor.needsUpdate = true;
+    scene.add(instancedGrass);
+
+    const flowerCount = 42;
+    const flowerStems = new THREE.InstancedMesh(
+      new THREE.CylinderGeometry(0.012, 0.018, 0.38, 5),
+      new THREE.MeshBasicMaterial({ color: 0x587b43 }),
+      flowerCount
+    );
+    const petalColors = [0xe7a2aa, 0xf1cf72, 0xf4eee0, 0xb7acd8];
+    const flowerPetals = new THREE.InstancedMesh(
+      new THREE.SphereGeometry(0.052, 8, 6),
+      new THREE.MeshBasicMaterial({ color: 0xffffff }),
+      flowerCount * 5
+    );
+    const flowerCenters = new THREE.InstancedMesh(
+      new THREE.SphereGeometry(0.029, 8, 6),
+      new THREE.MeshBasicMaterial({ color: 0xf4ca62 }),
+      flowerCount
+    );
+    for (let i = 0; i < flowerCount; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 3.1 + Math.random() * 4.7;
+      const x = Math.cos(angle) * dist;
+      const z = Math.sin(angle) * dist;
+      const height = 0.29 + Math.random() * 0.2;
+      const headY = -0.045 + height * 0.88;
+
+      dummy.position.set(x, -0.045 + height / 2, z);
+      dummy.rotation.set(0, 0, 0);
+      dummy.scale.set(1, height / 0.38, 1);
+      dummy.updateMatrix();
+      flowerStems.setMatrixAt(i, dummy.matrix);
+
+      const color = new THREE.Color(petalColors[Math.floor(Math.random() * petalColors.length)]);
+      for (let petal = 0; petal < 5; petal++) {
+        const petalAngle = (petal / 5) * Math.PI * 2;
+        const petalIndex = i * 5 + petal;
+        dummy.position.set(
+          x + Math.cos(petalAngle) * 0.065,
+          headY + Math.sin(petalAngle) * 0.065,
+          z + 0.035
+        );
+        dummy.rotation.set(0, 0, petalAngle);
+        dummy.scale.set(1, 1, 0.52);
+        dummy.updateMatrix();
+        flowerPetals.setMatrixAt(petalIndex, dummy.matrix);
+        flowerPetals.setColorAt(petalIndex, color);
+      }
+
+      dummy.position.set(x, headY, z + 0.075);
+      dummy.rotation.set(0, 0, 0);
+      dummy.scale.set(1, 1, 0.7);
+      dummy.updateMatrix();
+      flowerCenters.setMatrixAt(i, dummy.matrix);
+    }
+
+    flowerStems.instanceMatrix.needsUpdate = true;
+    flowerPetals.instanceMatrix.needsUpdate = true;
+    flowerPetals.instanceColor.needsUpdate = true;
+    flowerCenters.instanceMatrix.needsUpdate = true;
+    scene.add(flowerStems, flowerPetals, flowerCenters);
+
+    // 6. Transition State Controller
+    let curSit = 0;
+    let nextSit = 0;
+    let morphProgress = 0;
+    let isTransitioning = false;
+
+    function transitionTo(newIndex, dir = 1) {
+      const cleanNew = (newIndex % TOTAL_SLOTS + TOTAL_SLOTS) % TOTAL_SLOTS;
+      if (cleanNew === curSit && !isTransitioning) return;
+
+      nextSit = cleanNew;
+      mapLandmarks(SITUATIONS[curSit], SITUATIONS[nextSit]);
+      morphMaterial.uniforms.mapA.value = textures[curSit];
+      morphMaterial.uniforms.mapB.value = textures[nextSit];
+      morphMaterial.uniforms.grounds.value.set(SITUATIONS[curSit].ground, SITUATIONS[nextSit].ground);
+      morphMaterial.uniforms.direction.value = dir;
+      morphProgress = 0;
+      isTransitioning = true;
+      badgeName.textContent = SITUATIONS[nextSit].name;
+
+      // Update quadrant pills
+      subjectPills.forEach(p => {
+        const s = parseInt(p.dataset.slot);
+        p.classList.toggle('active', Math.abs(cleanNew - s) < 3 || (s === 0 && cleanNew >= 21));
+      });
+    }
+
+    function stepTurn(delta) {
+      targetIndex = (targetIndex + delta + TOTAL_SLOTS) % TOTAL_SLOTS;
+      transitionTo(targetIndex, Math.sign(delta));
+    }
+
+    // 7. Interactive Controls (Drag, Buttons, Wheel, Keys)
+    stageContainer.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      lastPointerX = e.clientX;
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - lastPointerX;
+      lastPointerX = e.clientX;
+      azimuth += dx * 0.006;
+      turnVelocity = dx * 0.006;
+
+      const slot = Math.round((-azimuth / (2 * Math.PI) * TOTAL_SLOTS) % TOTAL_SLOTS + TOTAL_SLOTS) % TOTAL_SLOTS;
+      if (slot !== targetIndex) {
+        targetIndex = slot;
+        transitionTo(slot, Math.sign(-dx) || 1);
+      }
+    });
+
+    window.addEventListener('pointerup', () => {
+      isDragging = false;
+    });
+
+    document.getElementById('turn-left').addEventListener('click', () => stepTurn(-1));
+    document.getElementById('turn-right').addEventListener('click', () => stepTurn(1));
+    trackBar.addEventListener('click', (event) => {
+      const bounds = trackBar.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+      const slot = Math.round(progress * (TOTAL_SLOTS - 1));
+      targetIndex = slot;
+      azimuth = -(slot / TOTAL_SLOTS) * (2 * Math.PI);
+      transitionTo(slot, Math.sign(slot - curSit) || 1);
+    });
+
+    stageContainer.addEventListener('wheel', (event) => {
+      event.preventDefault();
+      stepTurn(Math.sign(event.deltaY || event.deltaX));
+    }, { passive: false });
+
+    subjectPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const slot = parseInt(pill.dataset.slot);
+        targetIndex = slot;
+        azimuth = -(slot / TOTAL_SLOTS) * (2 * Math.PI);
+        transitionTo(slot, 1);
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') stepTurn(-1);
+      if (e.key === 'ArrowRight') stepTurn(1);
+    });
+
+    // 8. Theme Switcher (Day / Night)
+    const themeBtn = document.getElementById('theme-btn');
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('portfolio-theme', isDark ? 'night' : 'day');
+      morphMaterial.uniforms.light.value = isDark ? 0.45 : 1.0;
+      groundMat.color.setHex(isDark ? 0x223522 : 0x84a555);
+    });
+
+    // Restore saved theme
+    if (localStorage.getItem('portfolio-theme') === 'night') {
+      document.documentElement.classList.add('dark');
+      morphMaterial.uniforms.light.value = 0.45;
+      groundMat.color.setHex(0x223522);
+    }
+
+    // 9. Procedural Audio Engine
+    let audioCtx = null, masterGain = null;
+    const audioBtn = document.getElementById('audio-btn');
+    audioBtn.addEventListener('click', () => {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+
+        // Wind noise
+        const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.05;
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+        noise.loop = true;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(380, audioCtx.currentTime);
+        noise.connect(filter);
+        filter.connect(masterGain);
+        noise.start();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const isOn = audioBtn.classList.toggle('active');
+      masterGain.gain.setTargetAtTime(isOn ? 0.35 : 0.001, audioCtx.currentTime, 0.2);
+    });
+
+    // 10. Animation Loop
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+      const time = clock.getElapsedTime();
+
+      // Inertia damping
+      if (!isDragging && Math.abs(turnVelocity) > 0.0001) {
+        azimuth += turnVelocity * delta * 60;
+        turnVelocity *= Math.pow(0.92, delta * 60);
+      }
+
+      // Progress morphing
+      if (isTransitioning) {
+        morphProgress += delta * 2.4;
+        if (morphProgress >= 1.0) {
+          morphProgress = 1.0;
+          isTransitioning = false;
+          curSit = nextSit;
+          morphMaterial.uniforms.mapA.value = textures[curSit];
+          morphMaterial.uniforms.progress.value = 0;
+        } else {
+          morphMaterial.uniforms.progress.value = morphProgress;
+        }
+      }
+
+      // Sway grass with gentle wind wave
+      if (grassShader) grassShader.uniforms.time.value = time;
+
+      // Update scrub bar
+      const normProgress = ((targetIndex / TOTAL_SLOTS) * 100);
+      trackFill.style.width = normProgress + '%';
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Resize Handler
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

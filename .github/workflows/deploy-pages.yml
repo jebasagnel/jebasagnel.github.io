@@ -31,7 +31,13 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html styles.css script.js .nojekyll _site/
-          cp -R assets "New Resume Box" _site/
+          mkdir -p _site/assets/the-boring-blog/standalone-hero/art/situations
+          mkdir -p _site/assets/the-boring-blog/standalone-hero/sky
+          cp -R assets/fonts assets/icons assets/audio _site/assets/
+          cp assets/the-boring-blog/standalone-hero/index.html _site/assets/the-boring-blog/standalone-hero/
+          cp assets/the-boring-blog/standalone-hero/sky/dawn.webp _site/assets/the-boring-blog/standalone-hero/sky/
+          cp assets/the-boring-blog/standalone-hero/art/situations/*.webp _site/assets/the-boring-blog/standalone-hero/art/situations/
+          cp -R "New Resume Box" _site/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

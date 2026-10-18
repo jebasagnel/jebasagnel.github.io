@@ -10,6 +10,40 @@ const buddyBubble = buddy?.querySelector(".buddy__bubble");
 const buddyCopy = buddy?.querySelector(".buddy__copy");
 const buddyDismiss = buddy?.querySelector(".buddy__dismiss");
 const year = document.querySelector("#year");
+const creativeEntry = document.querySelector("#creative-entry");
+const portfolioShell = document.querySelector("#portfolio-shell");
+
+const savedTheme = localStorage.getItem("portfolio-theme");
+if (savedTheme === "night") {
+  root.dataset.theme = "dark";
+}
+
+window.addEventListener("storage", (event) => {
+  if (event.key !== "portfolio-theme") {
+    return;
+  }
+
+  const isDark = event.newValue === "night";
+  root.dataset.theme = isDark ? "dark" : "light";
+  themeToggle?.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
+});
+
+const dismissCreativeEntry = () => {
+  if (!creativeEntry || creativeEntry.classList.contains("creative-entry--leaving")) {
+    return;
+  }
+
+  document.body.classList.remove("entry-active");
+  portfolioShell?.removeAttribute("inert");
+  creativeEntry.classList.add("creative-entry--leaving");
+  window.setTimeout(() => creativeEntry.remove(), 700);
+};
+
+if (window.location.hash) {
+  dismissCreativeEntry();
+}
+
+window.addEventListener("hashchange", dismissCreativeEntry);
 
 if (year) {
   year.textContent = new Date().getFullYear();
@@ -18,6 +52,7 @@ if (year) {
 themeToggle?.addEventListener("click", () => {
   const isDark = root.dataset.theme !== "dark";
   root.dataset.theme = isDark ? "dark" : "light";
+  localStorage.setItem("portfolio-theme", isDark ? "night" : "day");
   themeToggle.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
 });
 
