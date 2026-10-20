@@ -12,6 +12,7 @@ const buddyDismiss = buddy?.querySelector(".buddy__dismiss");
 const year = document.querySelector("#year");
 const creativeEntry = document.querySelector("#creative-entry");
 const portfolioShell = document.querySelector("#portfolio-shell");
+const creativeEntryFrame = creativeEntry?.querySelector("iframe");
 
 const savedTheme = localStorage.getItem("portfolio-theme");
 if (savedTheme === "night") {
@@ -63,6 +64,20 @@ if (soundToggle && ambientAudio) {
 
   ambientAudio.volume = musicStartVolume;
 
+  const postAudioState = () => {
+    if (!creativeEntryFrame?.contentWindow) {
+      return;
+    }
+
+    const origin = window.location.origin;
+    creativeEntryFrame.contentWindow.postMessage({
+      type: "portfolio-audio-state",
+      playing: !ambientAudio.paused,
+      muted: ambientAudio.muted,
+      blocked: soundToggle.classList.contains("sound-toggle--blocked"),
+    }, origin === "null" ? "*" : origin);
+  };
+
   const updateSoundToggle = () => {
     const isPlaying = !ambientAudio.paused;
     const isAudible = isPlaying && !ambientAudio.muted;
@@ -78,6 +93,7 @@ if (soundToggle && ambientAudio) {
     soundToggle.setAttribute("aria-label", label);
     soundToggle.setAttribute("title", title);
     soundToggle.setAttribute("aria-pressed", String(isAudible));
+    postAudioState();
   };
 
   const fadeMusicIn = () => {
@@ -120,10 +136,11 @@ if (soundToggle && ambientAudio) {
         soundToggle.disabled = true;
         console.error("Background music could not be played.", error);
       }
+      postAudioState();
     });
   };
 
-  soundToggle.addEventListener("click", () => {
+  const toggleAmbientAudio = () => {
     if (ambientAudio.paused) {
       soundToggle.classList.remove("sound-toggle--blocked");
       ambientAudio.muted = false;
@@ -139,7 +156,26 @@ if (soundToggle && ambientAudio) {
       fadeMusicIn();
     }
     updateSoundToggle();
+  };
+
+  soundToggle.addEventListener("click", toggleAmbientAudio);
+
+  window.addEventListener("message", (event) => {
+    if (
+      event.source !== creativeEntryFrame?.contentWindow ||
+      event.origin !== window.location.origin
+    ) {
+      return;
+    }
+
+    if (event.data?.type === "portfolio-audio-toggle") {
+      toggleAmbientAudio();
+    } else if (event.data?.type === "portfolio-audio-state-request") {
+      postAudioState();
+    }
   });
+
+  creativeEntryFrame?.addEventListener("load", postAudioState);
 
   ambientAudio.addEventListener("play", updateSoundToggle);
   ambientAudio.addEventListener("pause", updateSoundToggle);

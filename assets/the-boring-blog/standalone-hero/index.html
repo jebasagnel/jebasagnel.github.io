@@ -405,7 +405,7 @@
     .hero {
       position: absolute;
       top: auto;
-      bottom: clamp(14rem, 30vh, 21rem);
+      bottom: calc(var(--intro-track-height, 11rem) + max(1.25rem, env(safe-area-inset-bottom)) + 1rem);
       left: 0;
       right: 0;
       z-index: 30;
@@ -458,6 +458,27 @@
 
     .hero__go {
       pointer-events: auto;
+    }
+
+    @media (min-width: 761px) {
+      .hero {
+        align-items: flex-start;
+        padding-inline: clamp(2rem, 5vw, 5rem);
+        text-align: left;
+      }
+
+      .hero__word {
+        max-width: min(40vw, 38rem);
+      }
+
+      .hero__blurb {
+        max-width: min(40vw, 34rem);
+        margin-left: 0;
+      }
+
+      .hero__go {
+        align-self: flex-start;
+      }
     }
 
     /* ==========================================================================
@@ -656,7 +677,6 @@
 
       .hero {
         top: auto;
-        bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 206px);
       }
 
       .hero__word {
@@ -707,11 +727,6 @@
     }
 
     @media (max-width: 640px) and (max-height: 700px) {
-      .hero {
-        top: auto;
-        bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 198px);
-      }
-
       .hero__word {
         font-size: clamp(1.8rem, 8vw, 2.35rem);
       }
@@ -745,10 +760,6 @@
     }
 
     @media (max-width: 640px) and (max-height: 560px) {
-      .hero {
-        bottom: calc(max(0.4rem, env(safe-area-inset-bottom)) + 188px);
-      }
-
       .hero__word {
         font-size: clamp(1.65rem, 7.5vw, 2rem);
         margin-bottom: 0.25rem;
@@ -779,18 +790,6 @@
       }
     }
 
-    @media (max-width: 340px) and (max-height: 700px) {
-      .hero {
-        bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 238px);
-      }
-    }
-
-    @media (max-width: 340px) and (max-height: 560px) {
-      .hero {
-        bottom: calc(max(0.4rem, env(safe-area-inset-bottom)) + 232px);
-      }
-    }
-
     @media (max-width: 640px) and (max-height: 600px) {
       .hero__blurb {
         display: none;
@@ -798,10 +797,6 @@
     }
 
     @media (min-width: 641px) and (max-height: 760px) {
-      .hero {
-        bottom: clamp(14rem, 30vh, 21rem);
-      }
-
       .hero__word {
         font-size: clamp(2rem, 5vw, 3rem);
       }
@@ -812,28 +807,32 @@
       }
     }
 
-    @media (min-width: 641px) and (max-height: 560px) {
-      .hero {
-        bottom: clamp(14rem, 30vh, 21rem);
+    @media (max-height: 560px) {
+      .hero__blurb,
+      .situation-badge,
+      .track__meta {
+        display: none;
       }
 
+      .subject-pill {
+        min-height: 2.25rem;
+        padding-block: 0.3rem;
+      }
+    }
+
+    @media (min-width: 641px) and (max-height: 560px) {
       .hero__word {
         font-size: clamp(1.65rem, 4vw, 2.25rem);
         margin-bottom: 0.3rem;
       }
 
       .hero__blurb {
-        max-width: 34rem;
         margin-bottom: 0.3rem;
         font-size: 0.8rem;
       }
     }
 
     @media (min-width: 641px) and (min-height: 761px) and (max-height: 1200px) {
-      .hero {
-        bottom: clamp(14rem, 32vh, 21rem);
-      }
-
       .hero__word {
         font-size: clamp(2.5rem, 4vw, 3rem);
         line-height: 1.05;
@@ -1042,6 +1041,11 @@
     </div>
   </div>
 
+  <audio id="standalone-audio" preload="none" aria-hidden="true">
+    <source src="../../../assets/audio/aesthetic-ambient.ogg" type="audio/ogg; codecs=vorbis">
+    <source src="../../../assets/audio/aesthetic-ambient.mp3" type="audio/mpeg">
+  </audio>
+
   <!-- ==========================================================================
        THREE.JS WEBGL RBF CHARACTER MORPH & MEADOW ENGINE
        ========================================================================== -->
@@ -1067,6 +1071,16 @@
     const trackFill = document.getElementById('track-fill');
     const trackBar = document.getElementById('track-bar');
     const subjectPills = document.querySelectorAll('.subject-pill');
+    const trackContainer = document.querySelector('.track');
+    const updateTrackHeight = () => {
+      document.documentElement.style.setProperty(
+        '--intro-track-height',
+        `${trackContainer.getBoundingClientRect().height}px`
+      );
+    };
+    updateTrackHeight();
+    new ResizeObserver(updateTrackHeight).observe(trackContainer);
+    window.addEventListener('resize', updateTrackHeight);
 
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
@@ -1205,12 +1219,15 @@
     function frameCharacter(ground = SITUATIONS[curSit].ground) {
       const referenceScale = compactViewport.matches ? 0.58 : 0.68;
       const scale = compactViewport.matches ? 0.4 : 0.52;
+      const compositionOffset = compactViewport.matches
+        ? 0
+        : Math.min(window.innerWidth * 0.004, 4.4);
       const groundLine = 0.95 + 8 * ground * (referenceScale - 1);
       meadow.position.y = compactViewport.matches
         ? (window.matchMedia('(max-height: 600px)').matches ? 1.95 : 0.95)
         : 0.65;
       morphMesh.scale.set(scale, scale, 1);
-      morphMesh.position.set(0, groundLine + scale * (4 - ground * 8), 0);
+      morphMesh.position.set(compositionOffset, groundLine + scale * (4 - ground * 8), 0);
     }
     frameCharacter();
 
@@ -1469,57 +1486,59 @@
       groundMat.color.setHex(0x223522);
     }
 
-    // 9. Procedural Audio Engine
-    let audioCtx = null, masterGain = null;
+    // 9. Shared portfolio soundtrack control
     const audioBtn = document.getElementById('audio-btn');
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    const setAudioButtonState = (isPlaying) => {
-      audioBtn.classList.toggle('active', isPlaying);
-      audioBtn.setAttribute('aria-pressed', String(isPlaying));
-      audioBtn.setAttribute('aria-label', isPlaying ? 'Mute meadow audio' : 'Play meadow ambiance');
-      audioBtn.title = isPlaying ? 'Mute meadow audio' : 'Play meadow ambiance';
+    const standaloneAudio = document.getElementById('standalone-audio');
+    const setAudioButtonState = (isPlaying, isMuted = !isPlaying, isBlocked = false) => {
+      const isAudible = isPlaying && !isMuted;
+      const label = isAudible ? 'Mute background music' : 'Play background music';
+      audioBtn.classList.toggle('active', isAudible);
+      audioBtn.setAttribute('aria-pressed', String(isAudible));
+      audioBtn.setAttribute('aria-label', label);
+      audioBtn.title = isBlocked ? 'Autoplay is blocked; tap to start background music' : label;
     };
 
-    audioBtn.addEventListener('click', async () => {
-      const isPlaying = audioBtn.getAttribute('aria-pressed') !== 'true';
+    const requestAudioState = () => {
+      window.parent.postMessage(
+        { type: 'portfolio-audio-state-request' },
+        window.location.origin === 'null' ? '*' : window.location.origin
+      );
+    };
 
-      try {
-        if (!AudioContextClass) {
-          throw new Error('Web Audio is not supported by this browser.');
+    if (window.parent !== window) {
+      window.addEventListener('message', (event) => {
+        if (event.source !== window.parent || event.origin !== window.location.origin) return;
+        if (event.data?.type === 'portfolio-audio-state') {
+          setAudioButtonState(event.data.playing, event.data.muted, event.data.blocked);
         }
-
-        if (!audioCtx) {
-          audioCtx = new AudioContextClass();
-          masterGain = audioCtx.createGain();
-          masterGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-          masterGain.connect(audioCtx.destination);
-
-          const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
-          const data = buffer.getChannelData(0);
-          for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.05;
-          const noise = audioCtx.createBufferSource();
-          noise.buffer = buffer;
-          noise.loop = true;
-          const filter = audioCtx.createBiquadFilter();
-          filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(380, audioCtx.currentTime);
-          noise.connect(filter);
-          filter.connect(masterGain);
-          noise.start();
-        }
-
-        if (isPlaying && audioCtx.state !== 'running') {
-          await audioCtx.resume();
-        }
-
-        masterGain.gain.setTargetAtTime(isPlaying ? 0.35 : 0.001, audioCtx.currentTime, 0.2);
-        setAudioButtonState(isPlaying);
-      } catch (error) {
-        setAudioButtonState(false);
+      });
+      requestAudioState();
+    } else {
+      standaloneAudio.addEventListener('play', () => setAudioButtonState(true, standaloneAudio.muted));
+      standaloneAudio.addEventListener('pause', () => setAudioButtonState(false));
+      standaloneAudio.addEventListener('volumechange', () => {
+        setAudioButtonState(!standaloneAudio.paused, standaloneAudio.muted);
+      });
+      standaloneAudio.addEventListener('error', () => {
         audioBtn.disabled = true;
-        audioBtn.setAttribute('aria-label', 'Meadow audio unavailable');
-        audioBtn.title = 'Meadow audio unavailable';
-        console.error('Meadow audio could not be started.', error);
+        audioBtn.setAttribute('aria-label', 'Background music unavailable');
+        audioBtn.title = 'Background music unavailable';
+      });
+    }
+
+    audioBtn.addEventListener('click', async () => {
+      if (window.parent !== window) {
+        window.parent.postMessage(
+          { type: 'portfolio-audio-toggle' },
+          window.location.origin === 'null' ? '*' : window.location.origin
+        );
+        return;
+      }
+
+      if (standaloneAudio.paused) {
+        await standaloneAudio.play();
+      } else {
+        standaloneAudio.muted = !standaloneAudio.muted;
       }
     });
 
